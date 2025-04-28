@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "2222433096",
+    "database": "sigra",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "2222433096",
+    "database": "sigra",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "2222433096",
+    "database": "sigra",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
+}
