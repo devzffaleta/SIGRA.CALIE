@@ -1,0 +1,250 @@
+{{!< layouts/main}}
+
+{{#section 'css'}}
+    <link rel="stylesheet" href="/css/grupo-permissoes.css">
+{{/section}}
+
+{{! Conteúdo da Página de Grupo de Permissões - extraído de test-layout.hbs --}}
+<h1>{{pageTitle}}</h1>
+
+<div class="user-actions"> 
+    <button id="add-group-btn" class="btn btn-primary"> <i class="fas fa-plus"></i> Adicionar Grupo</button> 
+</div>
+
+{{!-- Tabela para Desktop --}}
+<div class="table-responsive-wrapper desktop-only"> {{!-- Classe para esconder em mobile --}}
+    <table class="permission-group-table"> 
+        <thead>
+            <tr>
+                <th>Nome do Grupo</th>
+                <th>Descrição</th>
+                <th>Nº de Usuários</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each grupos}}
+                <tr>
+                    <td>{{this.nome}}</td>
+                    <td>{{this.descricao}}</td>
+                    <td>{{this.numUsuarios}}</td> 
+                    <td class="actions">
+                        <button class="btn btn-sm btn-edit" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-delete" title="Excluir"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            {{else}}
+                <tr>
+                    <td colspan="4" class="no-groups-message">Nenhum grupo de permissão encontrado.</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+    {{!-- Cards para Mobile --}}
+<div class="permission-group-cards-mobile mobile-only"> {{!-- Classe para esconder em desktop --}}
+    {{#each grupos}}
+        <div class="permission-group-card-mobile">
+            <div class="card-header">
+                <strong>{{this.nome}}</strong>
+                <div class="card-actions">
+                    <button class="btn btn-sm btn-edit" title="Editar"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-delete" title="Excluir"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+            <div class="card-body">
+                <p><strong>Descrição:</strong> {{this.descricao}}</p>
+                <p><strong>Nº de Usuários:</strong> {{this.numUsuarios}}</p>
+            </div>
+        </div>
+    {{else}}
+        <p class="no-groups-message">Nenhum grupo de permissão encontrado.</p>
+    {{/each}}
+</div>
+
+{{!-- ADICIONADO: Modal Adicionar Grupo (Precisa ser definido no HTML!) --}}
+<div id="add-group-modal" class="modal-overlay hidden"> 
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Novo Grupo de Permissão</h2>
+            <button id="close-add-group-modal-btn" class="modal-close-btn">&times;</button> 
+        </div>
+        <div class="modal-body">
+            <form id="add-group-form"> 
+                <div class="form-group">
+                    <label for="add-group-name">Nome do Grupo <span class="required">*</span></label>
+                    <input type="text" id="add-group-name" name="add-group-name" required>
+                </div>
+                <fieldset class="permission-section">
+                    <legend>Permissões <span class="required">*</span></legend>
+                    {{!-- Exemplo: Adicionar as categorias e permissões aqui --}}
+                    <div class="permission-category">
+                        <h3>Acesso a menus</h3>
+                        <div class="permission-grid">
+                            <div class="permission-item"><input type="checkbox" id="add-perm-menu-vistoria" name="permissoes[]" value="ver_vistoria"><label for="add-perm-menu-vistoria">Aprovar Vistorias</label></div>
+                            {{!-- Outros itens de permissão --}}
+                        </div>
+                    </div>
+                     {{!-- Outras categorias --}}
+                </fieldset>
+                <div class="modal-footer">
+                    <button type="button" id="cancel-add-group-btn" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Criar Grupo</button> 
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{!-- Fim do Modal Adicionar --}}
+
+{{!-- Modal para Editar Grupo de Permissão --}}
+<div id="edit-group-modal" class="modal-overlay hidden"> {{!-- ID diferente, escondido --}}
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Editar grupo de permissão</h2> {{!-- Título diferente --}}
+            <button id="close-edit-modal-btn" class="modal-close-btn">&times;</button> {{!-- ID diferente --}}
+        </div>
+        <div class="modal-body">
+            {{!-- O action do form pode ser diferente no futuro --}}
+            <form id="edit-group-form"> {{!-- ID diferente --}}
+                <input type="hidden" id="edit-group-id" name="edit-group-id"> {{!-- Campo oculto para ID do grupo --}}
+                <div class="form-group">
+                    <label for="edit-group-name">Nome do Grupo <span class="required">*</span></label>
+                    <input type="text" id="edit-group-name" name="edit-group-name" required> {{!-- ID diferente --}}
+                </div>
+
+                <fieldset class="permission-section">
+                    <legend>Permissões <span class="required">*</span></legend>
+                    {{!-- As permissões terão IDs diferentes para evitar conflito --}}
+                    {{!-- Exemplo: id="edit-perm-menu-vistoria" --}}
+
+                    <div class="permission-category">
+                        <h3>Acesso a menus</h3>
+                        <div class="permission-grid">
+                            {{!-- Atenção: Os IDs e fors dos checkboxes/labels DEVEM ser únicos para o modal de edição --}}
+                            <div class="permission-item"><input type="checkbox" id="edit-perm-menu-vistoria"><label for="edit-perm-menu-vistoria">Aprovar Vistorias</label><i class="fas fa-question-circle tooltip-icon"></i></div>
+                            <div class="permission-item"><input type="checkbox" id="edit-perm-menu-painel"><label for="edit-perm-menu-painel">Acessar Painel Financeiro</label><i class="fas fa-question-circle tooltip-icon"></i></div>
+                            <div class="permission-item"><input type="checkbox" id="edit-perm-menu-relatorio"><label for="edit-perm-menu-relatorio">Acessar Relatórios</label><i class="fas fa-question-circle tooltip-icon"></i></div>
+                            <div class="permission-item"><input type="checkbox" id="edit-perm-menu-contato"><label for="edit-perm-menu-contato">Acessar Contatos</label><i class="fas fa-question-circle tooltip-icon"></i></div>
+                            <div class="permission-item"><input type="checkbox" id="edit-perm-menu-config"><label for="edit-perm-menu-config">Acessar Configurações da Empresa</label><i class="fas fa-question-circle tooltip-icon"></i></div>
+                            <div class="permission-item"><input type="checkbox" id="edit-perm-menu-ferramenta"><label for="edit-perm-menu-ferramenta">Acessar Ferramentas</label><i class="fas fa-question-circle tooltip-icon"></i></div>
+                        </div>
+                    </div>
+                        {{!-- Repetir estrutura similar para as outras categorias de permissão, --}}
+                        {{!-- SEMPRE usando IDs únicos (ex: prefixo 'edit-') --}}
+                        {{!-- ... (categorias cotações, vistorias, relatórios com IDs únicos) ... --}}
+
+                </fieldset>
+
+                <div class="modal-footer">
+                    <button type="button" id="cancel-edit-group-btn" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button> {{!-- Texto diferente --}}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{!-- Fim do Modal Editar --}}
+
+
+{{#section 'js'}}
+<script>
+    // Script específico para a página de Grupo de Permissões
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Controle do Modal "Adicionar Grupo" ---
+        const addGroupBtn = document.getElementById('add-group-btn');
+        const addGroupModal = document.getElementById('add-group-modal');
+        const closeAddGroupModalBtn = document.getElementById('close-add-group-modal-btn'); 
+        const cancelAddGroupBtn = document.getElementById('cancel-add-group-btn');
+        const addGroupForm = document.getElementById('add-group-form');
+
+        const openAddGroupModal = () => addGroupModal?.classList.remove('hidden');
+        const closeAddGroupModal = () => addGroupModal?.classList.add('hidden');
+
+        if (addGroupBtn) {
+            addGroupBtn.addEventListener('click', openAddGroupModal);
+        } else {
+            console.error('Botão "Adicionar Grupo" não encontrado!');
+        }
+
+        if (closeAddGroupModalBtn) {
+            closeAddGroupModalBtn.addEventListener('click', closeAddGroupModal);
+        }
+        if(cancelAddGroupBtn){
+            cancelAddGroupBtn.addEventListener('click', closeAddGroupModal);
+        }
+        if (addGroupModal) {
+            addGroupModal.addEventListener('click', (event) => {
+                if (event.target === addGroupModal) closeAddGroupModal();
+            });
+        }
+        if (addGroupForm) {
+            addGroupForm.addEventListener('submit', (event) => {
+                event.preventDefault(); 
+                alert('Formulário Adicionar Grupo enviado (simulação)! Fechando modal.');
+                // TODO: Lógica de envio fetch/AJAX aqui
+                closeAddGroupModal();
+            });
+        }
+
+        // --- Controle do Modal "Editar Grupo" --- (Similar ao Adicionar)
+        const editGroupBtns = document.querySelectorAll('.permission-group-table .btn-edit, .permission-group-cards-mobile .btn-edit');
+        const editGroupModal = document.getElementById('edit-group-modal');
+        const closeEditGroupModalBtn = document.getElementById('close-edit-modal-btn');
+        const cancelEditGroupBtn = document.getElementById('cancel-edit-group-btn');
+        const editGroupForm = document.getElementById('edit-group-form');
+        const editGroupIdInput = document.getElementById('edit-group-id');
+        const editGroupNameInput = document.getElementById('edit-group-name');
+
+        const openEditGroupModal = (groupData) => {
+            if(!editGroupModal || !editGroupIdInput || !editGroupNameInput) {
+                console.error("Elementos do modal de edição de grupo não encontrados!");
+                return;
+            }
+            console.log("Abrindo modal para editar grupo: ", groupData);
+            // Preencher form (exemplo)
+            editGroupIdInput.value = groupData.id || '';
+            editGroupNameInput.value = groupData.nome || '';
+            // TODO: Marcar os checkboxes de permissão corretos com base em groupData.permissoes
+
+            editGroupModal.classList.remove('hidden');
+        };
+        const closeEditGroupModal = () => editGroupModal?.classList.add('hidden');
+
+        if(editGroupBtns.length > 0) {
+            editGroupBtns.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    // TODO: Buscar dados do grupo (API ou elemento pai)
+                    const placeholderGroupData = { id: 'grp456', nome: 'Grupo Exemplo Edit', permissoes: ['ver_vistoria'] };
+                    openEditGroupModal(placeholderGroupData);
+                });
+            });
+        } else {
+            console.warn("Nenhum botão 'Editar Grupo' encontrado.");
+        }
+
+        if(closeEditGroupModalBtn) {
+            closeEditGroupModalBtn.addEventListener('click', closeEditGroupModal);
+        }
+        if(cancelEditGroupBtn) {
+            cancelEditGroupBtn.addEventListener('click', closeEditGroupModal);
+        }
+        if(editGroupModal) {
+            editGroupModal.addEventListener('click', (event) => {
+                if (event.target === editGroupModal) closeEditGroupModal();
+            });
+        }
+        if(editGroupForm) {
+            editGroupForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const groupId = editGroupIdInput.value;
+                alert(`Formulário Editar Grupo ${groupId} enviado (simulação)! Fechando modal.`);
+                // TODO: Lógica de envio fetch/AJAX
+                closeEditGroupModal();
+            });
+        }
+
+    });
+</script>
+{{/section}} 

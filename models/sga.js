@@ -1,31 +1,28 @@
-'use strict';
-const { Model, DataTypes } = require('sequelize');
+import { Model, DataTypes } from 'sequelize';
 
-module.exports = (sequelize) => {
+export default (sequelize) => {
   class SGA extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      // Define association here
       SGA.belongsTo(models.User, {
         foreignKey: 'sga_usuario_responsavel',
         as: 'usuarioResponsavel'
       });
       
-      // Uma SGA pode ter várias requisições
-      SGA.hasMany(models.Requisicao, {
+      // Comentando associações com modelos inexistentes (Requisicao, SGASyncLog)
+      /* 
+      // Uma SGA pode ter várias requisições - Verifique se os modelos Requisicao e SGASyncLog existem e serão importados corretamente pelo index.js
+      SGA.hasMany(models.Requisicao, { // <--- Possível ponto de erro se Requisicao não for carregado
         foreignKey: 'codigo_SGA_FK',
         as: 'requisicoes'
       });
       
       // Uma SGA pode ter vários logs de sincronização
-      SGA.hasMany(models.SGASyncLog, {
+      SGA.hasMany(models.SGASyncLog, { // <--- Possível ponto de erro se SGASyncLog não for carregado
         foreignKey: 'codigo_SGA_FK',
         as: 'logsSync'
       });
+      */
     }
   }
   
@@ -73,7 +70,7 @@ module.exports = (sequelize) => {
       type: DataTypes.UUID,
       allowNull: true,
       references: {
-        model: 'users',
+        model: 'users', // Sequelize geralmente pega o nome da tabela aqui
         key: 'user_codigo_PK'
       }
     },
@@ -100,7 +97,7 @@ module.exports = (sequelize) => {
   }, {
     sequelize,
     modelName: 'SGA',
-    tableName: 'SGA',
+    tableName: 'SGA', // Garante o nome correto da tabela
     underscored: true,
     timestamps: true,
     createdAt: 'created_at',
