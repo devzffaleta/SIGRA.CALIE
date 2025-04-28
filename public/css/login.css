@@ -1,0 +1,464 @@
+/* Reset básico e estilos globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff; /* Alterado para fundo branco como no desktop */
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Container Principal */
+.login-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* --- Estilos Mobile (Padrão) --- */
+
+.mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff; /* Alterado para fundo branco */
+    color: #343a40; /* Alterado para texto/ícone escuro */
+    padding: 15px 20px;
+    position: fixed; /* Fixo no topo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    border-bottom: 1px solid #eee; /* Adicionado borda inferior */
+}
+
+.logo-mobile {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.notification-icon-mobile {
+    font-size: 1.4em;
+}
+
+.main-content {
+    width: 100%;
+    padding-top: 70px; /* Espaço para o header fixo */
+    padding-bottom: 60px; /* Espaço para o footer fixo */
+}
+
+.login-panel {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 70px - 60px);
+}
+
+.login-form-container {
+    background-color: #fff; /* Alterado para fundo branco */
+    color: #333; /* Alterado para texto escuro */
+    padding: 40px 25px; /* Aumentar padding vertical */
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Esconder elementos desktop por padrão */
+.login-title-desktop,
+.login-subtitle-desktop,
+.form-group-desktop,
+.remember-me,
+.notifications-panel {
+    display: none;
+}
+
+.login-title-mobile {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    color: #333; /* Texto escuro */
+}
+
+.login-subtitle-mobile {
+    font-size: 0.9em;
+    margin-bottom: 30px;
+    color: #666; /* Cinza mais escuro */
+}
+
+.login-form .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600; /* Igual ao desktop */
+    font-size: 0.9em;
+    color: #555; /* Igual ao desktop */
+}
+
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon .input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border: 1px solid #ddd; /* Borda igual desktop */
+    border-radius: 5px;
+    background-color: #f8f9fa; /* Fundo igual desktop */
+    color: #333;
+    font-size: 1em;
+}
+
+.login-form input::placeholder {
+    color: #aaa;
+}
+
+.form-options {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 25px;
+    margin-top: -10px;
+}
+
+.forgot-password {
+    color: #007bff; /* Azul igual desktop */
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 15px;
+    background-color: #343a40; /* Cor igual botão desktop */
+    color: white; /* Cor igual botão desktop */
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: #23272b; /* Hover igual desktop */
+}
+
+.mobile-footer {
+    background-color: #343a40; /* Alterado para cinza escuro */
+    color: #ccc; /* Mantido cinza claro para contraste */
+    text-align: center;
+    padding: 15px;
+    font-size: 0.8em;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+
+/* --- Estilos Desktop (Media Query) --- */
+@media (min-width: 769px) {
+
+    body {
+        background-color: #fff; /* Fundo branco no desktop */
+    }
+
+    .mobile-header, .mobile-footer, .login-title-mobile, .login-subtitle-mobile, .form-group-mobile {
+        display: none; /* Esconder elementos mobile */
+    }
+
+    .login-container {
+        /* Layout de duas colunas */
+    }
+
+    .main-content {
+        display: flex;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .login-panel {
+        flex: 1; /* Ocupa metade do espaço */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff; /* Fundo branco */
+        min-height: 100vh;
+        padding: 40px;
+    }
+
+    .login-form-container {
+        background-color: transparent; /* Sem fundo azul */
+        color: #333; /* Cor padrão do texto */
+        padding: 0;
+        max-width: 400px; /* Limita largura do form */
+        width: 100%;
+        text-align: left;
+        flex-grow: 0;
+    }
+
+    .login-title-desktop {
+        display: block;
+        font-size: 2.5em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .login-subtitle-desktop {
+        display: block;
+        font-size: 1em;
+        color: #666;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .form-group-desktop {
+        display: block; /* Exibir campos desktop */
+        margin-bottom: 25px;
+    }
+
+     .login-form label {
+        font-weight: 600;
+        font-size: 0.9em;
+        color: #555;
+    }
+
+    .login-form input[type="text"],
+    .login-form input[type="password"] {
+        padding: 12px 15px; /* Padding normal, sem ícone */
+        border: 1px solid #ddd; /* Borda mais suave */
+        background-color: #f8f9fa; /* Fundo levemente cinza */
+    }
+
+    .form-options {
+        display: flex;
+        justify-content: space-between; /* Espaçar 'Lembrar-me' e 'Esqueceu senha' */
+        align-items: center;
+        margin-bottom: 30px;
+        margin-top: 0;
+    }
+
+    .remember-me {
+        display: flex; /* Exibir checkbox */
+        align-items: center;
+        font-size: 0.9em;
+        color: #555;
+    }
+
+    .remember-me input[type="checkbox"] {
+        margin-right: 8px;
+        cursor: pointer;
+    }
+
+    .remember-me label {
+        margin-bottom: 0; /* Remover margem */
+        cursor: pointer;
+        font-weight: normal;
+    }
+
+    .forgot-password {
+        color: #007bff; /* Azul padrão para links */
+    }
+
+    .btn-login {
+        background-color: #343a40; /* Cor do botão desktop */
+        color: white;
+        padding: 12px;
+        font-size: 1em;
+    }
+
+    .btn-login:hover {
+        background-color: #23272b;
+    }
+
+    /* Painel de Notificações */
+    .notifications-panel {
+        display: flex; /* Exibir painel */
+        flex-direction: column;
+        flex: 1; /* Ocupa outra metade */
+        background-color: #f8f9fa; /* Fundo cinza claro */
+        padding: 50px 40px;
+        border-left: 1px solid #e0e0e0;
+    }
+
+    .notifications-title {
+        font-size: 1.4em;
+        color: #333;
+        margin-bottom: 30px;
+        font-weight: 600;
+    }
+
+    .notifications-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px; /* Espaço entre notificações */
+    }
+
+    .notification-item {
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        display: flex;
+        align-items: flex-start;
+        gap: 15px; /* Espaço entre ícone e conteúdo */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .notification-icon-container {
+        flex-shrink: 0;
+        background-color: #e9ecef; /* Fundo do ícone */
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .notification-icon {
+        color: #495057; /* Cor do ícone */
+        font-size: 1.1em;
+    }
+
+    .notification-content {
+        flex-grow: 1;
+    }
+
+    .notification-item-title {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 4px;
+    }
+
+    .notification-date {
+        font-size: 0.8em;
+        color: #888;
+        margin-bottom: 8px;
+    }
+
+    .notification-description {
+        font-size: 0.9em;
+        color: #555;
+        line-height: 1.5;
+    }
+}
+
+/* --- Estilos do Modal de Recuperação de Senha --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fundo escuro semi-transparente */
+    display: none; /* Escondido por padrão */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Acima de outros elementos */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    display: flex; /* Mostra quando ativo */
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 25px 25px; /* Diminuído o padding */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 450px; /* Largura máxima */
+    width: 90%;
+    position: relative;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.6em;
+    color: #aaa;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+}
+
+.modal-close-button:hover {
+    color: #333;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 10px; /* Diminuída margem */
+    color: #333;
+    font-size: 1.4em; /* Diminuída fonte */
+}
+
+.modal-content p {
+    margin-bottom: 20px; /* Diminuída margem */
+    color: #666;
+    line-height: 1.5; /* Ajustado line-height */
+    font-size: 0.95em; /* Diminuída fonte */
+}
+
+.btn-whatsapp {
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px; /* Diminuído padding */
+    background-color: #25D366; 
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.95em; /* Diminuída fonte */
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-whatsapp i {
+    margin-right: 8px; 
+    font-size: 1.1em; /* Diminuída fonte do ícone */
+}
+
+.modal-content small {
+    /* Estilo do small já estava no HTML, pode ajustar aqui se necessário */
+     font-size: 0.85em; /* Diminuída fonte */
+} 

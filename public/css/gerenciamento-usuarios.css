@@ -1,0 +1,312 @@
+/* Estilos para a página de Gerenciamento de Usuários */
+
+.user-actions {
+    margin-bottom: 1.5rem;
+    text-align: right; /* Alinha o botão à direita */
+}
+
+/* Estilo básico para botões (pode ser movido para um CSS global depois) */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 0.375rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    text-decoration: none; /* Remove sublinhado de links se usar <a> */
+}
+
+.btn i {
+    margin-right: 0.35rem;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #4f46e5; /* Cor roxa como exemplo */
+    border-color: #4f46e5;
+}
+
+.btn-primary:hover {
+    background-color: #4338ca;
+    border-color: #3f34c4;
+}
+
+/* Tabela de usuários */
+.user-table {
+    width: 100%;
+    margin-top: 1rem;
+    border-collapse: collapse; /* Remove espaços entre bordas */
+    background-color: #fff;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border-radius: 0.5rem;
+    overflow: hidden; /* Garante que bordas arredondadas funcionem */
+}
+
+.user-table th,
+.user-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb; /* Borda cinza clara */
+}
+
+.user-table th {
+    background-color: #f9fafb; /* Fundo cinza bem claro para cabeçalho */
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280; /* Cor cinza escura */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.user-table tbody tr:last-child td {
+    border-bottom: none; /* Remove borda inferior da última linha */
+}
+
+.user-table tbody tr:hover {
+    background-color: #f3f4f6; /* Cor de fundo suave no hover */
+}
+
+.user-table td.actions {
+    text-align: right;
+}
+
+.user-table td.actions .btn {
+    margin-left: 0.5rem;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.btn-edit {
+    color: #3b82f6; /* Azul */
+    background-color: transparent;
+    border: none;
+}
+.btn-edit:hover {
+    color: #1d4ed8;
+}
+
+.btn-delete {
+    color: #ef4444; /* Vermelho */
+    background-color: transparent;
+    border: none;
+}
+.btn-delete:hover {
+    color: #b91c1c;
+}
+
+.no-users-message {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Estilo para o link do card (para remover sublinhado e cor padrão) */
+.config-card-link {
+    text-decoration: none;
+    color: inherit; /* Herda a cor do texto do card */
+    display: block; /* Faz o link ocupar o espaço do card */
+}
+
+/* ----- Layout Responsivo ----- */
+
+/* Por padrão (Desktop): Mostra tabela, esconde cards */
+.user-cards-mobile {
+    display: none;
+}
+.user-table-wrapper {
+    display: block;
+}
+
+/* Estilos para os Cards Mobile */
+.user-card-mobile {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.user-card-mobile .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.user-card-mobile .card-header strong {
+    font-weight: 600;
+    color: #374151;
+}
+
+.user-card-mobile .card-actions .btn {
+    margin-left: 0.5rem;
+}
+
+/* Aumentar tamanho dos botões/ícones de ação no card mobile */
+.user-card-mobile .card-actions .btn-sm {
+    padding: 0.4rem 0.6rem; 
+}
+
+.user-card-mobile .card-actions .btn-sm i {
+    font-size: 0.9rem; 
+}
+
+.user-card-mobile .card-body {
+    padding: 0.75rem 1rem;
+}
+
+.user-card-mobile .card-body p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+.user-card-mobile .card-body p strong {
+    color: #374151;
+    min-width: 60px; /* Ajuda a alinhar valores */
+    display: inline-block;
+    margin-right: 5px;
+}
+
+/* Cores para Status */
+.status-ativo {
+    color: #16a34a; /* Verde */
+    font-weight: 500;
+}
+
+.status-inativo {
+    color: #ef4444; /* Vermelho */
+    font-weight: 500;
+}
+
+/* --- Media Query para Telas Pequenas (Ex: Celulares) --- */
+@media (max-width: 640px) {
+    /* Esconde a tabela e mostra os cards */
+    .user-table-wrapper.desktop-only { 
+        display: none;
+    }
+    .user-cards-mobile.mobile-only {
+        display: block; 
+    }
+
+    /* Ajusta o botão de adicionar */
+    .user-actions {
+        text-align: left; 
+        margin-bottom: 1rem;
+    }
+    .user-actions .btn {
+        width: 100%; 
+        text-align: center;
+    }
+}
+
+/* ----- Estilos Específicos para Modais de Usuário ----- */
+
+/* Layout do formulário em linhas */
+#add-user-modal .form-row,
+#edit-user-modal .form-row {
+    display: flex;
+    gap: 1.5rem; /* Espaçamento entre colunas */
+    margin-bottom: 1rem;
+}
+
+#add-user-modal .form-row .form-group,
+#edit-user-modal .form-row .form-group {
+    flex: 1; /* Faz cada grupo ocupar metade do espaço */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ajustes para campos de formulário dentro do modal */
+#add-user-modal .form-group label,
+#edit-user-modal .form-group label {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+#add-user-modal .form-group input[type="text"],
+#add-user-modal .form-group input[type="password"],
+#add-user-modal .form-group input[type="number"],
+#add-user-modal .form-group select,
+#edit-user-modal .form-group input[type="text"],
+#edit-user-modal .form-group input[type="password"],
+#edit-user-modal .form-group input[type="number"],
+#edit-user-modal .form-group select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    box-sizing: border-box; /* Importante para padding não estourar */
+    background-color: #fff; /* <<< ADICIONADO: Fundo branco */
+}
+
+#add-user-modal .form-group input:focus,
+#add-user-modal .form-group select:focus,
+#edit-user-modal .form-group input:focus,
+#edit-user-modal .form-group select:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+}
+
+#add-user-modal .form-group small,
+#edit-user-modal .form-group small {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+/* Campo de porcentagem */
+.input-percent {
+    position: relative;
+}
+
+.input-percent input[type="number"] {
+    padding-right: 2.5rem; /* Espaço para o símbolo % */
+}
+
+.input-percent span {
+    position: absolute;
+    right: 0.75rem;
+    top: 2.1rem; /* Ajustar conforme altura do label+input */
+    color: #6b7280;
+    font-size: 0.875rem;
+    pointer-events: none; /* Para não atrapalhar o clique no input */
+}
+
+/* Tooltips simples (pode melhorar depois) */
+.tooltip-trigger {
+    cursor: help;
+    border-bottom: 1px dotted #6b7280;
+}
+
+/* Para o modal largo */
+.modal-content.large {
+    max-width: 800px; /* Ou outro valor que funcione bem */
+}
+
+/* Botão secundário (Cancelar) */
+.btn-secondary {
+    background-color: #e5e7eb;
+    border-color: #d1d5db;
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background-color: #d1d5db;
+    border-color: #9ca3af;
+} 

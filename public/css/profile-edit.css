@@ -1,0 +1,151 @@
+/* Container principal da página de edição */
+.profile-edit-container {
+    max-width: 900px; /* Limita a largura para melhor leitura */
+    margin: 0 auto; /* Centraliza */
+    padding: 20px;
+}
+
+.profile-edit-container h1 {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    color: #343a40;
+    font-size: 1.8em;
+}
+
+/* Estilo do formulário */
+.profile-edit-form fieldset {
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+}
+
+.profile-edit-form legend {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #343a40;
+    padding: 0 10px;
+    margin-left: 10px;
+}
+
+/* Linhas de formulário para agrupar campos */
+.form-row {
+    display: flex;
+    flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+    gap: 20px; /* Espaço entre grupos de formulário na mesma linha */
+    margin-bottom: 15px;
+}
+
+/* Grupos de formulário */
+.form-group {
+    flex: 1 1 100%; /* Ocupa 100% por padrão */
+    min-width: 150px; /* Largura mínima */
+}
+
+/* Layouts de coluna */
+.form-group-half {
+    flex-basis: calc(50% - 10px); /* 2 colunas (considerando o gap) */
+}
+
+.form-group-third {
+    flex-basis: calc(33.333% - 14px); /* 3 colunas (considerando o gap) */
+}
+
+.form-group-two-thirds {
+     flex-basis: calc(66.666% - 7px); /* 2/3 de coluna (considerando o gap) */
+}
+
+/* Estilos dos labels e inputs (similar ao login desktop) */
+.profile-edit-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.profile-edit-form input[type="text"],
+.profile-edit-form input[type="email"],
+.profile-edit-form input[type="tel"],
+.profile-edit-form input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    font-size: 1em;
+    color: #333;
+    box-sizing: border-box; /* Garante que padding não aumente a largura */
+}
+
+.profile-edit-form input:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+    color: #6c757d;
+}
+
+.profile-edit-form small {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Ações do formulário */
+.form-actions {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.btn-save {
+    background-color: #343a40; /* Mesmo do botão de login desktop */
+    color: white;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-right: 10px;
+}
+.btn-save:hover {
+    background-color: #23272b;
+}
+
+.btn-cancel {
+    background-color: #6c757d; /* Cinza */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+.btn-cancel:hover {
+    background-color: #5a6268;
+}
+
+/* Responsividade básica para o formulário */
+@media (max-width: 600px) {
+    .form-group-half,
+    .form-group-third,
+    .form-group-two-thirds {
+        flex-basis: 100%; /* Empilha tudo em telas pequenas */
+    }
+    .form-actions {
+        text-align: center;
+    }
+    .btn-save,
+    .btn-cancel {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .btn-save {
+         margin-right: 0;
+    }
+} 
