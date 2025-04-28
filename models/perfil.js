@@ -22,6 +22,7 @@ export default (sequelize) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       allowNull: false,
+      field: 'perfil_codigo_pk'
     },
     perfil_nome: {
       type: DataTypes.STRING(100),

@@ -1,9 +1,12 @@
 import express from 'express';
 
-// Importar o controller CommonJS usando createRequire
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const pagesController = require('../controllers/pagesController.cjs');
+// Remover import de createRequire e require
+// import { createRequire } from 'module';
+// const require = createRequire(import.meta.url);
+// const pagesController = require('../controllers/pagesController.cjs');
+
+// Importar como ES Module
+import * as pagesController from '../controllers/pagesController.js';
 
 const router = express.Router();
 
