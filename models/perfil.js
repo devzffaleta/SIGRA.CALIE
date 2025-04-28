@@ -1,13 +1,7 @@
-'use strict';
-const { Model, DataTypes } = require('sequelize');
+import { Model, DataTypes } from 'sequelize';
 
-module.exports = (sequelize) => {
+export default (sequelize) => {
   class Perfil extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // define association here
       Perfil.hasMany(models.User, {
@@ -15,7 +9,7 @@ module.exports = (sequelize) => {
         as: 'usuarios'
       });
       Perfil.belongsToMany(models.Permissao, {
-        through: models.PerfilPermissao,
+        through: models.PerfilPermissao, // Modelo de junção
         foreignKey: 'codigo_perfil_FK',
         otherKey: 'codigo_permissao_FK',
         as: 'permissoes'
@@ -28,6 +22,7 @@ module.exports = (sequelize) => {
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
       allowNull: false,
+      field: 'perfil_codigo_pk'
     },
     perfil_nome: {
       type: DataTypes.STRING(100),
@@ -44,18 +39,20 @@ module.exports = (sequelize) => {
         defaultValue: true,
         allowNull: false,
     },
-    perfil_admin_total: { // Adicionado baseado no schema anterior, mas removido da versão final do schema - confirmar se necessário
+    perfil_admin_total: { 
       type: DataTypes.BOOLEAN,
       defaultValue: false,
       allowNull: false,
-      comment: "Flag para indicar se é o perfil de admin supremo"
+      comment: "Flag para indicar se é o perfil de admin supremo (usar com cautela)"
     }
   }, {
     sequelize,
     modelName: 'Perfil',
     tableName: 'perfis',
     underscored: true,
-    timestamps: true, // Garante createdAt e updatedAt
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   });
   return Perfil;
 }; 

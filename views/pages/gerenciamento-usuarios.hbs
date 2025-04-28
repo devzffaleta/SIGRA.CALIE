@@ -1,0 +1,458 @@
+{{!< layouts/main}}
+
+{{#section 'css'}}
+    <link rel="stylesheet" href="/css/gerenciamento-usuarios.css">
+    <link rel="stylesheet" href="/css/profile-edit.css"> {{! Necessário para estilos do modal? Revisar }}
+{{/section}}
+
+{{! Conteúdo da Página de Gerenciamento de Usuários - extraído de test-layout.hbs --}}
+<h1>{{pageTitle}}</h1>
+
+<div class="user-actions">
+    <button class="btn btn-primary btn-add-user"> <i class="fas fa-plus"></i> Adicionar Usuário</button>
+</div>
+
+{{!-- Tabela para Desktop --}}
+<div class="user-table-wrapper desktop-only"> {{!-- Wrapper e classe desktop --}}
+    <table class="user-table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Função</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each users}}
+                <tr>
+                    <td>{{this.nome}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.funcao}}</td>
+                    <td>{{this.status}}</td>
+                    <td class="actions">
+                        <button class="btn btn-sm btn-edit" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-delete" title="Excluir"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            {{else}}
+                <tr>
+                    <td colspan="5" class="no-users-message">Nenhum usuário encontrado.</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+{{!-- Cards para Mobile --}}
+<div class="user-cards-mobile mobile-only">
+    {{#each users}}
+        <div class="user-card-mobile"> {{!-- Nova classe para card --}}
+            <div class="card-header">
+                <strong>{{this.nome}}</strong>
+                <div class="card-actions">
+                    <button class="btn btn-sm btn-edit" title="Editar"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-delete" title="Excluir"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+            <div class="card-body">
+                <p><strong>Email:</strong> {{this.email}}</p>
+                <p><strong>Função:</strong> {{this.funcao}}</p>
+                <p><strong>Status:</strong> <span class="status-{{toLowerCase this.status}}">{{this.status}}</span></p> {{!-- Classe para cor status --}}
+            </div>
+        </div>
+    {{else}}
+        <p class="no-users-message">Nenhum usuário encontrado.</p>
+    {{/each}}
+</div>
+
+{{!-- ********** NOVO: Modal Adicionar Usuário ********** --}}
+<div id="add-user-modal" class="modal-overlay hidden"> 
+    <div class="modal-content large"> {{!-- Adicionei a classe 'large' para modais maiores --}}
+        <div class="modal-header">
+            <h2>Novo Usuário</h2> 
+            <button id="close-add-user-modal-btn" class="modal-close-btn">&times;</button> 
+        </div>
+        <div class="modal-body">
+            <form id="add-user-form"> 
+                {{!-- Linha 1: Nome Completo, Usuário --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-user-nome">Nome Completo <span class="required">*</span></label>
+                        <input type="text" id="add-user-nome" name="add-user-nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-user-usuario">Usuário <span class="required">*</span></label>
+                        <input type="text" id="add-user-usuario" name="add-user-usuario" required>
+                    </div>
+                </div>
+
+                {{!-- Linha 2: Senha, Cooperativa --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-user-senha">Senha <span class="required">*</span></label>
+                        <input type="password" id="add-user-senha" name="add-user-senha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-user-cooperativa">Cooperativa Vinculada <span class="required">*</span></label>
+                        <select id="add-user-cooperativa" name="add-user-cooperativa" required>
+                            <option value="" disabled selected>Selecione a cooperativa...</option>
+                            {{!-- Opções virão do backend --}}
+                            <option value="coop1">Cooperativa Alfa</option>
+                            <option value="coop2">Cooperativa Beta</option>
+                        </select>
+                        <small>Selecione a cooperativa à qual o usuário será vinculado</small>
+                    </div>
+                </div>
+                
+                {{!-- Linha 3: SGA, Código Voluntário --}}
+                    <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-user-sga">SGA de Origem <span class="required">*</span></label>
+                        <select id="add-user-sga" name="add-user-sga" required>
+                            <option value="" disabled selected>Selecione o SGA...</option>
+                                {{!-- Opções virão do backend --}}
+                            <option value="sga1">SGA Principal</option>
+                            <option value="sga2">SGA Secundário</option>
+                        </select>
+                            <small>Selecione o SGA de onde os dados do usuário serão buscados</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-user-cod-voluntario">Código do Voluntário</label>
+                        <input type="text" id="add-user-cod-voluntario" name="add-user-cod-voluntario" placeholder="Ex: VOL001">
+                        <small>Código do voluntário correspondente na base do SGA para integração</small>
+                    </div>
+                </div>
+
+                {{!-- Linha 4: Função, Comissão Visível --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-user-funcao">Função <span class="required">*</span></label>
+                        <select id="add-user-funcao" name="add-user-funcao" required>
+                            <option value="" disabled selected>Selecione a função...</option>
+                            {{!-- Opções virão do backend/grupos de permissão --}}
+                            <option value="admin">Administrador</option>
+                            <option value="consultor">Consultor Vendas</option>
+                            <option value="financeiro">Financeiro</option>
+                            <option value="lider">Líder</option> {{!-- Adicionei líder --}}
+                        </select>
+                    </div>
+                    <div class="form-group input-percent">
+                        <label for="add-user-comissao-visivel">Porcentagem de Comissão Direta * (visível)</label>
+                        <input type="number" id="add-user-comissao-visivel" name="add-user-comissao-visivel" min="0" max="100" step="0.01">
+                        <span>%</span>
+                        <small>Esta porcentagem será exibida na tela de recorrentes para consultores e coordenadores</small>
+                    </div>
+                </div>
+
+                    {{!-- Linha 5: Comissão Invisível, Retirada Geral --}}
+                <div class="form-row">
+                    <div class="form-group input-percent">
+                        <label for="add-user-comissao-invisivel">Porcentagem de Comissão Direta * <span class="tooltip-trigger" title="Esta porcentagem será utilizada para calcular o valor do recorrente, mas não será exibida na interface">(invisível) <i class="fas fa-info-circle"></i></span></label>
+                        <input type="number" id="add-user-comissao-invisivel" name="add-user-comissao-invisivel" min="0" max="100" step="0.01">
+                        <span>%</span>
+                    </div>
+                    <div class="form-group input-percent">
+                        <label for="add-user-retirada">Porcentagem de Retirada * <span class="tooltip-trigger" title="Esta porcentagem será deduzida do valor total pago pelo associado e será exibida apenas para líderes na tela de gestão financeira">(visível apenas para líderes) <i class="fas fa-info-circle"></i></span></label>
+                        <input type="number" id="add-user-retirada" name="add-user-retirada" min="0" max="100" step="0.01">
+                            <span>%</span>
+                    </div>
+                </div>
+
+                {{!-- Linha 6: Coordenadores Responsáveis --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="add-user-coord1">Coordenadores Responsáveis</label>
+                        <select id="add-user-coord1" name="add-user-coord1">
+                            <option value="" selected>Selecione o 1º coordenador...</option>
+                            {{!-- Opções virão do backend (usuários líderes/coord) --}}
+                            <option value="coordA">Coordenador A</option>
+                            <option value="coordB">Coordenador B</option>
+                        </select>
+                    </div>
+                        <div class="form-group">
+                            <label for="add-user-coord2" style="visibility: hidden;">Coordenador 2</label> {{!-- Label oculto para alinhar --}}
+                            <select id="add-user-coord2" name="add-user-coord2">
+                            <option value="" selected>Selecione o 2º coordenador...</option>
+                            {{!-- Opções virão do backend --}}
+                                <option value="coordA">Coordenador A</option>
+                            <option value="coordB">Coordenador B</option>
+                        </select>
+                            <small>Selecione até 2 coordenadores responsáveis</small>
+                    </div>
+                </div>
+
+                {{!-- Linha 7: Comissão Coordenadores --}}
+                    <div class="form-row">
+                    <div class="form-group input-percent">
+                        <label for="add-user-comissao-coords">Porcentagem de Comissão dos Coordenadores</label>
+                        <input type="number" id="add-user-comissao-coords" name="add-user-comissao-coords" min="0" max="100" step="0.01">
+                        <span>%</span>
+                        <small>Esta porcentagem será dividida igualmente entre os coordenadores selecionados</small>
+                    </div>
+                    <div class="form-group"></div> {{!-- Placeholder para alinhar --}}
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="cancel-add-user-btn" class="btn btn-secondary">Cancelar</button> {{!-- Tipo button pra não submeter --}}
+                    <button type="submit" class="btn btn-primary">Criar</button> 
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{!-- Fim do Modal Adicionar Usuário --}}
+
+{{!-- ********** NOVO: Modal Editar Usuário ********** --}}
+<div id="edit-user-modal" class="modal-overlay hidden"> 
+    <div class="modal-content large"> 
+        <div class="modal-header">
+            <h2>Editar Usuário</h2> 
+            <button id="close-edit-user-modal-btn" class="modal-close-btn">&times;</button> 
+        </div>
+        <div class="modal-body">
+            <form id="edit-user-form"> 
+                <input type="hidden" id="edit-user-id" name="edit-user-id"> {{!-- Campo oculto para ID --}}
+                
+                    {{!-- Linha 1: Nome Completo, Usuário --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-user-nome">Nome Completo <span class="required">*</span></label>
+                        <input type="text" id="edit-user-nome" name="edit-user-nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-user-usuario">Usuário <span class="required">*</span></label>
+                        <input type="text" id="edit-user-usuario" name="edit-user-usuario" required>
+                    </div>
+                </div>
+
+                {{!-- Linha 2: Cooperativa, SGA --}}
+                    <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-user-cooperativa">Cooperativa Vinculada <span class="required">*</span></label>
+                        <select id="edit-user-cooperativa" name="edit-user-cooperativa" required>
+                            <option value="" disabled>Selecione a cooperativa...</option>
+                            {{!-- Opções virão do backend --}}
+                            <option value="coop1">Cooperativa Alfa</option>
+                            <option value="coop2">Cooperativa Beta</option>
+                        </select>
+                        <small>Selecione a cooperativa à qual o usuário será vinculado</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-user-sga">SGA de Origem <span class="required">*</span></label>
+                        <select id="edit-user-sga" name="edit-user-sga" required>
+                            <option value="" disabled>Selecione o SGA...</option>
+                                {{!-- Opções virão do backend --}}
+                            <option value="sga1">SGA Principal</option>
+                            <option value="sga2">SGA Secundário</option>
+                        </select>
+                            <small>Selecione o SGA de onde os dados do usuário serão buscados</small>
+                    </div>
+                </div>
+                
+                {{!-- Linha 3: Código Voluntário, Função --}}
+                    <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-user-cod-voluntario">Código do Voluntário</label>
+                        <input type="text" id="edit-user-cod-voluntario" name="edit-user-cod-voluntario" placeholder="Ex: VOL001">
+                        <small>Código do voluntário correspondente na base do SGA para integração</small>
+                    </div>
+                        <div class="form-group">
+                        <label for="edit-user-funcao">Função <span class="required">*</span></label>
+                        <select id="edit-user-funcao" name="edit-user-funcao" required>
+                            <option value="" disabled>Selecione a função...</option>
+                            {{!-- Opções virão do backend/grupos de permissão --}}
+                            <option value="admin">Administrador</option>
+                            <option value="consultor">Consultor Vendas</option>
+                            <option value="financeiro">Financeiro</option>
+                            <option value="lider">Líder</option>
+                        </select>
+                    </div>
+                </div>
+
+                {{!-- Linha 4: Comissão Visível, Comissão Invisível --}}
+                <div class="form-row">
+                    <div class="form-group input-percent">
+                        <label for="edit-user-comissao-visivel">Porcentagem de Comissão Direta * (visível)</label>
+                        <input type="number" id="edit-user-comissao-visivel" name="edit-user-comissao-visivel" min="0" max="100" step="0.01">
+                        <span>%</span>
+                        <small>Esta porcentagem será exibida na tela de recorrentes para consultores e coordenadores</small>
+                    </div>
+                    <div class="form-group input-percent">
+                        <label for="edit-user-comissao-invisivel">Porcentagem de Comissão Direta * <span class="tooltip-trigger" title="Esta porcentagem será utilizada para calcular o valor do recorrente, mas não será exibida na interface">(invisível) <i class="fas fa-info-circle"></i></span></label>
+                        <input type="number" id="edit-user-comissao-invisivel" name="edit-user-comissao-invisivel" min="0" max="100" step="0.01">
+                        <span>%</span>
+                    </div>
+                </div>
+
+                    {{!-- Linha 5: Retirada Geral, Comissão Coords --}}
+                <div class="form-row">
+                    <div class="form-group input-percent">
+                        <label for="edit-user-retirada">Porcentagem de Retirada * <span class="tooltip-trigger" title="Esta porcentagem será deduzida do valor total pago pelo associado e será exibida apenas para líderes na tela de gestão financeira">(visível apenas para líderes) <i class="fas fa-info-circle"></i></span></label>
+                        <input type="number" id="edit-user-retirada" name="edit-user-retirada" min="0" max="100" step="0.01">
+                            <span>%</span>
+                    </div>
+                        <div class="form-group input-percent">
+                        <label for="edit-user-comissao-coords">Porcentagem de Comissão dos Coordenadores</label>
+                        <input type="number" id="edit-user-comissao-coords" name="edit-user-comissao-coords" min="0" max="100" step="0.01">
+                        <span>%</span>
+                        <small>Esta porcentagem será dividida igualmente entre os coordenadores selecionados</small>
+                    </div>
+                </div>
+
+                {{!-- Linha 6: Coordenadores Responsáveis --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-user-coord1">Coordenadores Responsáveis</label>
+                        <select id="edit-user-coord1" name="edit-user-coord1">
+                            <option value="">Selecione o 1º coordenador...</option>
+                            {{!-- Opções virão do backend (usuários líderes/coord) --}}
+                            <option value="coordA">Coordenador A</option>
+                            <option value="coordB">Coordenador B</option>
+                        </select>
+                    </div>
+                        <div class="form-group">
+                            <label for="edit-user-coord2" style="visibility: hidden;">Coordenador 2</label> {{!-- Label oculto para alinhar --}}
+                            <select id="edit-user-coord2" name="edit-user-coord2">
+                            <option value="">Selecione o 2º coordenador...</option>
+                            {{!-- Opções virão do backend --}}
+                                <option value="coordA">Coordenador A</option>
+                            <option value="coordB">Coordenador B</option>
+                        </select>
+                            <small>Selecione até 2 coordenadores responsáveis</small>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" id="cancel-edit-user-btn" class="btn btn-secondary">Cancelar</button> 
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button> 
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+    {{!-- Fim do Modal Editar Usuário --}}
+
+{{#section 'js'}}
+<script>
+    // Script específico para os modais da página de Gerenciamento de Usuários
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Seletores Comuns ---
+        const addUserModal = document.getElementById('add-user-modal');
+        const editUserModal = document.getElementById('edit-user-modal');
+
+        // --- Controle do Modal "Adicionar Usuário" ---
+        const addUserBtn = document.querySelector('.btn-add-user'); 
+        const closeAddUserBtn = document.getElementById('close-add-user-modal-btn');
+        const cancelAddUserBtn = document.getElementById('cancel-add-user-btn');
+        const addUserForm = document.getElementById('add-user-form');
+
+        const openAddUserModal = () => addUserModal?.classList.remove('hidden');
+        const closeAddUserModal = () => addUserModal?.classList.add('hidden');
+
+        if (addUserBtn) {
+            addUserBtn.addEventListener('click', openAddUserModal);
+        } else {
+            console.error('Botão "Adicionar Usuário" não encontrado.');
+        }
+
+        if (closeAddUserBtn) {
+            closeAddUserBtn.addEventListener('click', closeAddUserModal);
+        }
+        if (cancelAddUserBtn) {
+            cancelAddUserBtn.addEventListener('click', closeAddUserModal);
+        }
+        if (addUserModal) {
+            addUserModal.addEventListener('click', (event) => {
+                // Fecha apenas se clicar no overlay (fundo)
+                if (event.target === addUserModal) closeAddUserModal();
+            });
+        }
+            if (addUserForm) {
+            addUserForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                alert('Formulário Adicionar Usuário enviado (simulação)! Fechando modal.');
+                // TODO: Adicionar lógica real de envio fetch/AJAX aqui
+                closeAddUserModal();
+            });
+        }
+
+        // --- Controle do Modal "Editar Usuário" ---
+        const editUserBtns = document.querySelectorAll('.user-table .btn-edit, .user-cards-mobile .btn-edit');
+        const closeEditUserBtn = document.getElementById('close-edit-user-modal-btn');
+        const cancelEditUserBtn = document.getElementById('cancel-edit-user-btn');
+        const editUserForm = document.getElementById('edit-user-form');
+        const editUserIdInput = document.getElementById('edit-user-id');
+        const editUserNameInput = document.getElementById('edit-user-nome');
+        const editUserUsuarioInput = document.getElementById('edit-user-usuario');
+        const editUserCooperativaSelect = document.getElementById('edit-user-cooperativa');
+        const editUserSgaSelect = document.getElementById('edit-user-sga');
+        const editUserCodVoluntarioInput = document.getElementById('edit-user-cod-voluntario');
+        const editUserFuncaoSelect = document.getElementById('edit-user-funcao');
+        // ... (adicionar seletores para os outros campos de edição se precisar preenchê-los)
+
+        const openEditUserModal = (userData) => {
+            if (!editUserModal || !editUserIdInput || !editUserNameInput /* ... etc */) {
+                console.error('Elementos do modal de edição não encontrados!');
+                return;
+            }
+            console.log('Abrindo modal para editar usuário:', userData);
+            
+            // Preencher o formulário (exemplo - precisa dos dados reais)
+            editUserIdInput.value = userData.id || ''; 
+            editUserNameInput.value = userData.nome || '';
+            editUserUsuarioInput.value = userData.usuario || ''; 
+            editUserCooperativaSelect.value = userData.cooperativa || ''; 
+            editUserSgaSelect.value = userData.sga || ''; 
+            editUserCodVoluntarioInput.value = userData.codVoluntario || '';
+            editUserFuncaoSelect.value = userData.funcaoValue || ''; 
+            // TODO: Preencher os outros campos (comissão, retirada, coords) com userData
+
+            editUserModal.classList.remove('hidden');
+        };
+        const closeEditUserModal = () => editUserModal?.classList.add('hidden');
+
+        if (editUserBtns.length > 0) {
+            editUserBtns.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    // TODO: Implementar lógica para buscar dados do usuário via API ou do elemento pai
+                    // Exemplo com dados fixos:
+                    const placeholderData = {
+                        id: 'user123', nome: 'Usuário Exemplo', usuario: 'user.ex',
+                        cooperativa: 'coop1', sga: 'sga2', codVoluntario: 'VOL-EX',
+                        funcaoValue: 'consultor' 
+                        // ... outros dados ...
+                    };
+                    openEditUserModal(placeholderData);
+                });
+            });
+        } else {
+            console.warn('Nenhum botão "Editar Usuário" encontrado.');
+        }
+
+        if (closeEditUserBtn) {
+            closeEditUserBtn.addEventListener('click', closeEditUserModal);
+        }
+            if (cancelEditUserBtn) {
+            cancelEditUserBtn.addEventListener('click', closeEditUserModal);
+        }
+        if (editUserModal) {
+            editUserModal.addEventListener('click', (event) => {
+                // Fecha apenas se clicar no overlay (fundo)
+                if (event.target === editUserModal) closeEditUserModal();
+            });
+        }
+            if (editUserForm) {
+            editUserForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const userId = editUserIdInput.value;
+                alert(`Formulário Editar Usuário ${userId} enviado (simulação)! Fechando modal.`);
+                // TODO: Adicionar lógica real de envio fetch/AJAX aqui
+                closeEditUserModal();
+            });
+        }
+
+    });
+</script>
+{{/section}} 

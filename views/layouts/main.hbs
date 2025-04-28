@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{pageTitle}} - SIGRA</title> {{! Título dinâmico }}
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- CSS Globais -->
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/modal.css"> {{! CSS base do modal }}
+
+    {{! Bloco para CSS específico da página, se necessário }}
+    {{{_sections.css}}}
+</head>
+<body class="{{bodyClass}}"> {{! Classe dinâmica para o body, ex: body-sidebar-collapsed }}
+
+    {{! --- Perfil Topo Direito --- }}
+    <a href="/profile/edit" class="top-right-profile-link">
+        <div class="top-right-profile">
+            <i class="fas fa-bell profile-bell-icon"></i>
+            <div class="profile-details">
+                <div class="avatar-circle">C</div> {{! Pode ser dinâmico no futuro }}
+                <div class="user-text">
+                    <span class="profile-name">Consultor</span> {{! Pode ser dinâmico }}
+                    <span class="profile-role">Consultor</span> {{! Pode ser dinâmico }}
+                </div>
+            </div>
+        </div>
+    </a>
+
+    {{! --- Botão Hambúrguer Mobile --- }}
+    <button class="sidebar-toggle-button">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    {{! --- Overlay Mobile --- }}
+    <div class="overlay"></div>
+
+    {{! --- Sidebar --- }}
+    {{> sidebar}}
+
+    {{! --- Conteúdo Principal da Página --- }}
+    <main class="main-page-content">
+        {{{body}}}
+    </main>
+
+    {{! --- Scripts Globais --- }}
+    <script>
+        // Script da Sidebar (Mobile e Desktop) - extraído de test-layout.hbs
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Menu Mobile (Hambúrguer) ---
+            const sidebarToggleButton = document.querySelector('.sidebar-toggle-button');
+            const sidebar = document.querySelector('.sidebar'); // Usado por ambos
+            const overlay = document.querySelector('.overlay');
+
+            if (sidebarToggleButton && sidebar && overlay) {
+                sidebarToggleButton.addEventListener('click', () => {
+                    sidebar.classList.toggle('open');
+                    overlay.classList.toggle('active');
+                    // Ocultar/mostrar botão hamburguer pode ser feito via CSS agora
+                    // sidebarToggleButton.classList.toggle('hidden-by-js'); 
+                });
+
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                    // sidebarToggleButton.classList.remove('hidden-by-js'); 
+                });
+            }
+
+            // --- Menu Desktop (Encolher/Expandir) ---
+            const desktopToggleButton = document.querySelector('.desktop-sidebar-toggle');
+            const bodyElement = document.body;
+
+            if (desktopToggleButton && sidebar && bodyElement) {
+                desktopToggleButton.addEventListener('click', () => {
+                    sidebar.classList.toggle('collapsed');
+                    bodyElement.classList.toggle('body-sidebar-collapsed'); 
+                });
+            }
+        });
+    </script>
+
+    {{! Bloco para JS específico da página, se necessário }}
+    {{{_sections.js}}}
+
+</body>
+</html> 

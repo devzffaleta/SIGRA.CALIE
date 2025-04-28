@@ -1,17 +1,11 @@
-'use strict';
-const { Model, DataTypes } = require('sequelize');
+import { Model, DataTypes } from 'sequelize';
 
-module.exports = (sequelize) => {
+export default (sequelize) => {
   class Permissao extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // define association here
       Permissao.belongsToMany(models.Perfil, {
-        through: models.PerfilPermissao,
+        through: models.PerfilPermissao, // Modelo de junção
         foreignKey: 'codigo_permissao_FK',
         otherKey: 'codigo_perfil_FK',
         as: 'perfis'
@@ -46,7 +40,9 @@ module.exports = (sequelize) => {
     modelName: 'Permissao',
     tableName: 'permissoes',
     underscored: true,
-    timestamps: true, // Garante createdAt e updatedAt
+    timestamps: true, 
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   });
   return Permissao;
 }; 

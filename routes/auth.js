@@ -4,7 +4,8 @@
 import express from 'express';
 // const authController = require('../controllers/authController'); // Linha antiga
 // import * as authController from '../controllers/authController.js'; // Linha antiga
-import * as authController from '../controllers/authController.cjs'; // << Atualizar para .cjs
+// import * as authController from '../controllers/authController.cjs'; // << Atualizar para .cjs
+import * as authController from '../controllers/authController.js'; // <<< CORRIGIDO PARA .js
 
 const router = express.Router();
 

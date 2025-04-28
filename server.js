@@ -22,6 +22,13 @@ hbs.registerHelper('toLowerCase', function (str) {
   return str; // Retorna o valor original se não for string
 });
 
+// <<< Adicionar Helper para Sections >>>
+hbs.registerHelper('section', function(name, options) {
+    if (!this._sections) this._sections = {};
+    this._sections[name] = options.fn(this);
+    return null; // Não renderiza nada onde o #section é chamado
+});
+
 dotenv.config(); // Carregar variáveis de ambiente (esta linha já faz o trabalho)
 
 // Obter __dirname em Módulos ES
