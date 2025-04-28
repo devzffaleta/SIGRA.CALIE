@@ -67,8 +67,8 @@ export async function createFirstAdmin(req, res, next) {
         // const perfilAdmin = await db.Perfil.findOne({ where: { perfil_nome: 'Admin Master' } });
         // if (!perfilAdmin) throw new Error('Perfil de administrador padrão não encontrado!');
         // const codigoPerfilAdmin = perfilAdmin.perfil_codigo_PK;
-        const codigoPerfilAdmin = 'dd94e7d3-38eb-4d65-a1e0-a12eef622cb0'; // << MANTER POR ORA, mas marcar para refatorar
-        if (codigoPerfilAdmin === 'dd94e7d3-38eb-4d65-a1e0-a12eef622cb0') {
+        const codigoPerfilAdmin = '09e58a5a-e3d1-4d68-9910-39cbc20bc4ea'; // << MANTER POR ORA, mas marcar para refatorar
+        if (codigoPerfilAdmin === '09e58a5a-e3d1-4d68-9910-39cbc20bc4ea') {
              console.warn('ALERTA: Usando UUID de perfil placeholder para primeiro admin! Refatorar busca.');
         }
 

@@ -4,7 +4,7 @@ dotenv.config(); // Carrega as variáveis do arquivo .env
 const config = {
   development: {
     username: process.env.DB_USER || 'root', // Usuário do banco (prioriza .env)
-    password: process.env.DB_PASSWORD || '2222433096', // Senha do banco (prioriza .env)
+    password: process.env.DB_PASSWORD || 'leroyD2020', // Senha do banco (prioriza .env)
     database: process.env.DB_NAME || 'sigra', // Nome do banco (prioriza .env)
     host: process.env.DB_HOST || 'localhost', // Endereço do servidor (prioriza .env)
     port: process.env.DB_PORT || 3306,        // Porta (prioriza .env, default 3306)
@@ -12,7 +12,7 @@ const config = {
   },
   test: {
     username: process.env.DB_USER_TEST || 'root',
-    password: process.env.DB_PASSWORD_TEST || '2222433096',
+    password: process.env.DB_PASSWORD_TEST || 'leroyD2020',
     database: process.env.DB_NAME_TEST || 'sigra_test', // Banco de dados para testes
     host: process.env.DB_HOST_TEST || 'localhost',
     port: process.env.DB_PORT_TEST || 3306,
