@@ -64,8 +64,8 @@ async function createFirstAdmin(req, res, next) {
             });
         }
 
-        const codigoPerfilAdmin = 'dd94e7d3-38eb-4d65-a1e0-a12eef622cb0'; 
-        if (codigoPerfilAdmin === 'dd94e7d3-38eb-4d65-a1e0-a12eef622cb0') {
+        const codigoPerfilAdmin = '09e58a5a-e3d1-4d68-9910-39cbc20bc4ea'; 
+        if (codigoPerfilAdmin === '09e58a5a-e3d1-4d68-9910-39cbc20bc4ea') {
              console.warn('ALERTA: Usando UUID de perfil placeholder ou específico para primeiro admin!');
         }
 
