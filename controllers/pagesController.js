@@ -1,3 +1,5 @@
+import db from '../models/index.js'; // Ajuste o caminho se necessário
+
 /**
  * Renderiza a página de teste da sidebar (agora simplificada)
  */
@@ -31,17 +33,37 @@ export function getConfiguracaoSistemaPage(req, res, next) {
 /**
  * Renderiza a Página de Gerenciamento de Usuários
  */
-export function getGerenciamentoUsuariosPage(req, res, next) {
+export async function getGerenciamentoUsuariosPage(req, res, next) {
     try {
-        // TODO: Buscar lista de usuários do banco de dados
-        const usersData = [
-            { nome: 'Bruno Caliel', email: 'bruno@example.com', funcao: 'Admin', status: 'Ativo' },
-            { nome: 'Fulano de Tal', email: 'fulano@example.com', funcao: 'Consultor', status: 'Inativo' }
-        ]; 
+        // Buscar lista de usuários do banco de dados, incluindo o perfil
+        const users = await db.User.findAll({
+            attributes: [
+                'user_codigo_PK', 
+                'user_nome', 
+                'user_email', 
+                'users_ativo'
+                // Não incluir todos os campos aqui por segurança/performance
+            ],
+            include: [{
+                model: db.Perfil,
+                as: 'perfil',
+                attributes: ['perfil_nome', 'perfil_codigo_PK'] // Buscar nome e ID do perfil
+            }],
+            raw: false, // Necessário para que a associação funcione corretamente
+            nest: true   // Organiza o resultado aninhado (perfil dentro de user)
+        });
 
-        res.render('pages/gerenciamento-usuarios', { 
+        // Mapear o resultado para facilitar o uso no template
+        const usersData = users.map(user => ({
+            ...user.toJSON(), // Converte instância Sequelize para objeto JS simples
+            status: user.users_ativo ? 'Ativo' : 'Inativo', // Mapeia booleano para string
+            // O nome da função/perfil estará em user.perfil.perfil_nome
+        }));
+
+
+        res.render('pages/gerenciamento-usuarios', {
             pageTitle: 'Gerenciamento de Usuários',
-            users: usersData,
+            users: usersData, // Passa os dados mapeados
             layout: 'layouts/main'
         });
     } catch (error) {
@@ -50,9 +72,7 @@ export function getGerenciamentoUsuariosPage(req, res, next) {
     }
 }
 
-/**
- * Renderiza a Página de Grupo de Permissões
- */
+/* REMOVIDO: Esta função foi movida para perfilController.js e a rota usa /gerenciamento-grupos
 export function getGrupoPermissoesPage(req, res, next) {
     try {
         // TODO: Buscar lista de grupos de permissão do banco de dados

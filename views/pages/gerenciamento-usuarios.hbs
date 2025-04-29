@@ -19,21 +19,25 @@
             <tr>
                 <th>Nome</th>
                 <th>Email</th>
-                <th>Função</th>
+                <th>Função (Perfil)</th>
                 <th>Status</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody>
             {{#each users}}
-                <tr>
-                    <td>{{this.nome}}</td>
-                    <td>{{this.email}}</td>
-                    <td>{{this.funcao}}</td>
-                    <td>{{this.status}}</td>
+                <tr data-user-id="{{this.user_codigo_PK}}">
+                    <td>{{this.user_nome}}</td>
+                    <td>{{this.user_email}}</td>
+                    <td>{{this.perfil.perfil_nome}}</td>
+                    <td>
+                        <span class="status-{{#if this.users_ativo}}ativo{{else}}inativo{{/if}}">
+                            {{this.status}}
+                        </span>
+                    </td>
                     <td class="actions">
-                        <button class="btn btn-sm btn-edit" title="Editar"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-delete" title="Excluir"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-sm btn-edit" title="Editar" data-user-id="{{this.user_codigo_PK}}"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-delete" title="Excluir" data-user-id="{{this.user_codigo_PK}}"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
             {{else}}
@@ -48,18 +52,18 @@
 {{!-- Cards para Mobile --}}
 <div class="user-cards-mobile mobile-only">
     {{#each users}}
-        <div class="user-card-mobile"> {{!-- Nova classe para card --}}
+        <div class="user-card-mobile" data-user-id="{{this.user_codigo_PK}}">
             <div class="card-header">
-                <strong>{{this.nome}}</strong>
+                <strong>{{this.user_nome}}</strong>
                 <div class="card-actions">
-                    <button class="btn btn-sm btn-edit" title="Editar"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-sm btn-delete" title="Excluir"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-sm btn-edit" title="Editar" data-user-id="{{this.user_codigo_PK}}"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-delete" title="Excluir" data-user-id="{{this.user_codigo_PK}}"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
             <div class="card-body">
-                <p><strong>Email:</strong> {{this.email}}</p>
-                <p><strong>Função:</strong> {{this.funcao}}</p>
-                <p><strong>Status:</strong> <span class="status-{{toLowerCase this.status}}">{{this.status}}</span></p> {{!-- Classe para cor status --}}
+                <p><strong>Email:</strong> {{this.user_email}}</p>
+                <p><strong>Função (Perfil):</strong> {{this.perfil.perfil_nome}}</p>
+                <p><strong>Status:</strong> <span class="status-{{#if this.users_ativo}}ativo{{else}}inativo{{/if}}">{{this.status}}</span></p>
             </div>
         </div>
     {{else}}
@@ -341,117 +345,137 @@
         // --- Seletores Comuns ---
         const addUserModal = document.getElementById('add-user-modal');
         const editUserModal = document.getElementById('edit-user-modal');
+        const editUserForm = document.getElementById('edit-user-form');
+        const editUserIdInput = document.getElementById('edit-user-id');
 
-        // --- Controle do Modal "Adicionar Usuário" ---
-        const addUserBtn = document.querySelector('.btn-add-user'); 
+        // --- Funções auxiliares Modal --- 
+        const openModal = (modal) => modal?.classList.remove('hidden');
+        const closeModal = (modal) => modal?.classList.add('hidden');
+
+        // --- Controle Modal "Adicionar Usuário" --- 
+        const addUserBtn = document.querySelector('.btn-add-user');
         const closeAddUserBtn = document.getElementById('close-add-user-modal-btn');
         const cancelAddUserBtn = document.getElementById('cancel-add-user-btn');
         const addUserForm = document.getElementById('add-user-form');
 
-        const openAddUserModal = () => addUserModal?.classList.remove('hidden');
-        const closeAddUserModal = () => addUserModal?.classList.add('hidden');
-
-        if (addUserBtn) {
-            addUserBtn.addEventListener('click', openAddUserModal);
-        } else {
-            console.error('Botão "Adicionar Usuário" não encontrado.');
-        }
-
-        if (closeAddUserBtn) {
-            closeAddUserBtn.addEventListener('click', closeAddUserModal);
-        }
-        if (cancelAddUserBtn) {
-            cancelAddUserBtn.addEventListener('click', closeAddUserModal);
-        }
-        if (addUserModal) {
-            addUserModal.addEventListener('click', (event) => {
-                // Fecha apenas se clicar no overlay (fundo)
-                if (event.target === addUserModal) closeAddUserModal();
-            });
-        }
-            if (addUserForm) {
+        if (addUserBtn) addUserBtn.addEventListener('click', () => openModal(addUserModal));
+        if (closeAddUserBtn) closeAddUserBtn.addEventListener('click', () => closeModal(addUserModal));
+        if (cancelAddUserBtn) cancelAddUserBtn.addEventListener('click', () => closeModal(addUserModal));
+        if (addUserModal) addUserModal.addEventListener('click', (event) => { if (event.target === addUserModal) closeModal(addUserModal); });
+        if (addUserForm) {
             addUserForm.addEventListener('submit', (event) => {
                 event.preventDefault();
-                alert('Formulário Adicionar Usuário enviado (simulação)! Fechando modal.');
-                // TODO: Adicionar lógica real de envio fetch/AJAX aqui
-                closeAddUserModal();
+                alert('Formulário Adicionar Usuário enviado (simulação)!');
+                // TODO: Lógica fetch POST /api/users
+                closeModal(addUserModal);
             });
         }
 
-        // --- Controle do Modal "Editar Usuário" ---
-        const editUserBtns = document.querySelectorAll('.user-table .btn-edit, .user-cards-mobile .btn-edit');
+        // --- Controle Modal "Editar Usuário" --- 
+        const editUserBtns = document.querySelectorAll('.btn-edit');
+        const deleteUserBtns = document.querySelectorAll('.btn-delete'); // Botões de exclusão
         const closeEditUserBtn = document.getElementById('close-edit-user-modal-btn');
         const cancelEditUserBtn = document.getElementById('cancel-edit-user-btn');
-        const editUserForm = document.getElementById('edit-user-form');
-        const editUserIdInput = document.getElementById('edit-user-id');
-        const editUserNameInput = document.getElementById('edit-user-nome');
-        const editUserUsuarioInput = document.getElementById('edit-user-usuario');
-        const editUserCooperativaSelect = document.getElementById('edit-user-cooperativa');
-        const editUserSgaSelect = document.getElementById('edit-user-sga');
-        const editUserCodVoluntarioInput = document.getElementById('edit-user-cod-voluntario');
-        const editUserFuncaoSelect = document.getElementById('edit-user-funcao');
-        // ... (adicionar seletores para os outros campos de edição se precisar preenchê-los)
 
-        const openEditUserModal = (userData) => {
-            if (!editUserModal || !editUserIdInput || !editUserNameInput /* ... etc */) {
+        const openEditUserModal = async (userId) => {
+            if (!editUserModal || !editUserIdInput) {
                 console.error('Elementos do modal de edição não encontrados!');
                 return;
             }
-            console.log('Abrindo modal para editar usuário:', userData);
+            console.log(`Abrindo modal para editar usuário ID: ${userId}`);
             
-            // Preencher o formulário (exemplo - precisa dos dados reais)
-            editUserIdInput.value = userData.id || ''; 
-            editUserNameInput.value = userData.nome || '';
-            editUserUsuarioInput.value = userData.usuario || ''; 
-            editUserCooperativaSelect.value = userData.cooperativa || ''; 
-            editUserSgaSelect.value = userData.sga || ''; 
-            editUserCodVoluntarioInput.value = userData.codVoluntario || '';
-            editUserFuncaoSelect.value = userData.funcaoValue || ''; 
-            // TODO: Preencher os outros campos (comissão, retirada, coords) com userData
+            // Limpar formulário antigo (importante)
+            editUserForm?.reset(); 
+            editUserIdInput.value = userId; // Define o ID no campo oculto
 
-            editUserModal.classList.remove('hidden');
+            // Placeholder: Aqui viria a chamada fetch para buscar dados completos
+            try {
+                 // TODO: Descomentar e implementar quando a API existir
+                // const response = await fetch(`/api/users/${userId}`); 
+                // if (!response.ok) throw new Error('Falha ao buscar dados do usuário');
+                // const userData = await response.json();
+                
+                // Apenas para demonstração, preenchemos com dados placeholder
+                 const placeholderData = {
+                     id: userId, nome: 'Nome Buscado API', usuario: 'usuario.api',
+                     cooperativa: 'coop1', sga: 'sga1', codVoluntario: 'VOL-API',
+                     funcaoValue: 'lider' // Exemplo
+                      // ... preencher todos os outros campos com userData
+                 };
+                 console.log('Dados (placeholder) para preencher modal:', placeholderData);
+                 // document.getElementById('edit-user-nome').value = userData.user_nome;
+                 // document.getElementById('edit-user-usuario').value = userData.user_login;
+                 // ... preencher outros campos ...
+                 document.getElementById('edit-user-nome').value = placeholderData.nome;
+                 document.getElementById('edit-user-usuario').value = placeholderData.usuario;
+                 document.getElementById('edit-user-cooperativa').value = placeholderData.cooperativa;
+                 document.getElementById('edit-user-sga').value = placeholderData.sga;
+                 document.getElementById('edit-user-cod-voluntario').value = placeholderData.codVoluntario;
+                 document.getElementById('edit-user-funcao').value = placeholderData.funcaoValue;
+                 // ... etc
+
+            } catch (error) {
+                console.error('Erro ao buscar dados do usuário para edição:', error);
+                alert('Não foi possível carregar os dados do usuário para edição.');
+                return; // Não abre o modal se falhar
+            }
+
+            openModal(editUserModal);
         };
-        const closeEditUserModal = () => editUserModal?.classList.add('hidden');
 
-        if (editUserBtns.length > 0) {
-            editUserBtns.forEach(button => {
-                button.addEventListener('click', (event) => {
-                    // TODO: Implementar lógica para buscar dados do usuário via API ou do elemento pai
-                    // Exemplo com dados fixos:
-                    const placeholderData = {
-                        id: 'user123', nome: 'Usuário Exemplo', usuario: 'user.ex',
-                        cooperativa: 'coop1', sga: 'sga2', codVoluntario: 'VOL-EX',
-                        funcaoValue: 'consultor' 
-                        // ... outros dados ...
-                    };
-                    openEditUserModal(placeholderData);
-                });
+        editUserBtns.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const userId = event.currentTarget.dataset.userId;
+                if (userId) {
+                    openEditUserModal(userId);
+                } else {
+                    console.error('Não foi possível obter o ID do usuário do botão Editar.');
+                }
             });
-        } else {
-            console.warn('Nenhum botão "Editar Usuário" encontrado.');
-        }
+        });
+        
+        if (closeEditUserBtn) closeEditUserBtn.addEventListener('click', () => closeModal(editUserModal));
+        if (cancelEditUserBtn) cancelEditUserBtn.addEventListener('click', () => closeModal(editUserModal));
+        if (editUserModal) editUserModal.addEventListener('click', (event) => { if (event.target === editUserModal) closeModal(editUserModal); });
 
-        if (closeEditUserBtn) {
-            closeEditUserBtn.addEventListener('click', closeEditUserModal);
-        }
-            if (cancelEditUserBtn) {
-            cancelEditUserBtn.addEventListener('click', closeEditUserModal);
-        }
-        if (editUserModal) {
-            editUserModal.addEventListener('click', (event) => {
-                // Fecha apenas se clicar no overlay (fundo)
-                if (event.target === editUserModal) closeEditUserModal();
-            });
-        }
-            if (editUserForm) {
+        if (editUserForm) {
             editUserForm.addEventListener('submit', (event) => {
                 event.preventDefault();
                 const userId = editUserIdInput.value;
-                alert(`Formulário Editar Usuário ${userId} enviado (simulação)! Fechando modal.`);
-                // TODO: Adicionar lógica real de envio fetch/AJAX aqui
-                closeEditUserModal();
+                alert(`Formulário Editar Usuário ${userId} enviado (simulação)!`);
+                // TODO: Lógica fetch PUT /api/users/${userId}
+                closeModal(editUserModal);
             });
         }
+
+        // --- Lógica de Exclusão --- 
+        deleteUserBtns.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const userId = event.currentTarget.dataset.userId;
+                 // Encontra o nome do usuário na linha da tabela ou card (exemplo)
+                 const userRow = event.currentTarget.closest('tr, .user-card-mobile'); 
+                 const userName = userRow ? (userRow.querySelector('td:first-child, strong')?.textContent || `ID ${userId}`) : `ID ${userId}`; 
+
+                if (userId && confirm(`Tem certeza que deseja excluir o usuário "${userName}"? Esta ação não pode ser desfeita.`)) {
+                    console.log(`Tentando excluir usuário ID: ${userId}`);
+                    // TODO: Implementar chamada fetch DELETE /api/users/${userId}
+                    // Exemplo de como remover a linha/card após sucesso:
+                    // fetch(`/api/users/${userId}`, { method: 'DELETE' })
+                    // .then(response => {
+                    //    if (!response.ok) throw new Error('Falha ao excluir');
+                    //    userRow?.remove(); // Remove o elemento do DOM
+                    //    alert('Usuário excluído com sucesso!');
+                    // })
+                    // .catch(error => {
+                    //    console.error('Erro ao excluir usuário:', error);
+                    //    alert('Erro ao excluir usuário.');
+                    // });
+                    alert(`Exclusão do usuário ${userId} simulada.`); 
+                } else if (!userId) {
+                     console.error('Não foi possível obter o ID do usuário do botão Excluir.');
+                }
+            });
+        });
 
     });
 </script>

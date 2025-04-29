@@ -29,8 +29,8 @@
                     <td>{{this.descricao}}</td>
                     <td>{{this.numUsuarios}}</td> 
                     <td class="actions">
-                        <button class="btn btn-sm btn-edit" title="Editar"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-delete" title="Excluir"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-sm btn-edit" title="Editar" data-perfil-id="{{this.id}}"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-delete" title="Excluir" data-perfil-id="{{this.id}}"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>
             {{else}}
@@ -49,8 +49,8 @@
             <div class="card-header">
                 <strong>{{this.nome}}</strong>
                 <div class="card-actions">
-                    <button class="btn btn-sm btn-edit" title="Editar"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-sm btn-delete" title="Excluir"><i class="fas fa-trash"></i></button>
+                    <button class="btn btn-sm btn-edit" title="Editar" data-perfil-id="{{this.id}}"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-delete" title="Excluir" data-perfil-id="{{this.id}}"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
             <div class="card-body">
@@ -196,28 +196,62 @@
         const editGroupForm = document.getElementById('edit-group-form');
         const editGroupIdInput = document.getElementById('edit-group-id');
         const editGroupNameInput = document.getElementById('edit-group-name');
+        // Adicionado: Seletores para os checkboxes de permissão no modal de edição
+        const editPermissionsCheckboxes = editGroupForm ? editGroupForm.querySelectorAll('fieldset.permission-section input[type="checkbox"]') : [];
 
-        const openEditGroupModal = (groupData) => {
+        const openEditGroupModal = async (perfilId) => { // Tornar async para aguardar fetch
             if(!editGroupModal || !editGroupIdInput || !editGroupNameInput) {
                 console.error("Elementos do modal de edição de grupo não encontrados!");
                 return;
             }
-            console.log("Abrindo modal para editar grupo: ", groupData);
-            // Preencher form (exemplo)
-            editGroupIdInput.value = groupData.id || '';
-            editGroupNameInput.value = groupData.nome || '';
-            // TODO: Marcar os checkboxes de permissão corretos com base em groupData.permissoes
 
-            editGroupModal.classList.remove('hidden');
+            // Limpar estado anterior do modal (nome, permissões marcadas)
+            editGroupNameInput.value = '';
+            editPermissionsCheckboxes.forEach(checkbox => checkbox.checked = false);
+            editGroupIdInput.value = perfilId; // Definir o ID do perfil a ser editado
+
+            try {
+                // TODO: Definir a rota correta da API para buscar detalhes do perfil
+                // Exemplo: const response = await fetch(`/api/perfis/${perfilId}`);
+                console.warn(`TODO: Implementar fetch para buscar dados do perfil com ID: ${perfilId}`);
+                // Simulação de dados recebidos da API:
+                const groupData = { id: perfilId, nome: 'Grupo Exemplo API', descricao: 'Descrição vinda da API', permissoes: ['edit-perm-menu-vistoria', 'edit-perm-menu-relatorio'] }; // Substituir pelos dados reais
+
+                if (!groupData) { // Tratar caso a API não encontre o perfil
+                     console.error(`Perfil com ID ${perfilId} não encontrado.`);
+                     alert('Erro ao buscar dados do grupo. Tente novamente.');
+                     return;
+                }
+
+                console.log("Abrindo modal para editar grupo: ", groupData);
+                // Preencher form com dados da API
+                editGroupIdInput.value = groupData.id || '';
+                editGroupNameInput.value = groupData.nome || '';
+                // Marcar os checkboxes de permissão corretos
+                editPermissionsCheckboxes.forEach(checkbox => {
+                    // Supondo que o 'value' ou 'id' do checkbox corresponda à permissão vinda da API
+                    if (groupData.permissoes && groupData.permissoes.includes(checkbox.id)) {
+                         checkbox.checked = true;
+                    }
+                });
+
+                editGroupModal.classList.remove('hidden');
+            } catch (error) {
+                console.error('Erro ao buscar dados do grupo para edição:', error);
+                alert('Erro ao carregar dados do grupo. Verifique o console.');
+            }
         };
         const closeEditGroupModal = () => editGroupModal?.classList.add('hidden');
 
         if(editGroupBtns.length > 0) {
             editGroupBtns.forEach(button => {
                 button.addEventListener('click', (event) => {
-                    // TODO: Buscar dados do grupo (API ou elemento pai)
-                    const placeholderGroupData = { id: 'grp456', nome: 'Grupo Exemplo Edit', permissoes: ['ver_vistoria'] };
-                    openEditGroupModal(placeholderGroupData);
+                    const perfilId = event.currentTarget.dataset.perfilId; // Pega o ID do atributo data
+                    if (perfilId) {
+                        openEditGroupModal(perfilId); // Passa o ID para a função
+                    } else {
+                        console.error('Não foi possível encontrar o data-perfil-id no botão de editar.');
+                    }
                 });
             });
         } else {
@@ -236,13 +270,86 @@
             });
         }
         if(editGroupForm) {
-            editGroupForm.addEventListener('submit', (event) => {
+            editGroupForm.addEventListener('submit', async (event) => { // Tornar async para fetch
                 event.preventDefault();
-                const groupId = editGroupIdInput.value;
-                alert(`Formulário Editar Grupo ${groupId} enviado (simulação)! Fechando modal.`);
-                // TODO: Lógica de envio fetch/AJAX
-                closeEditGroupModal();
+                const perfilId = editGroupIdInput.value;
+                const nomePerfil = editGroupNameInput.value;
+                // Coletar permissões marcadas
+                const permissoesMarcadas = Array.from(editPermissionsCheckboxes)
+                                               .filter(checkbox => checkbox.checked)
+                                               .map(checkbox => checkbox.id); // Ou checkbox.value, dependendo de como a API espera
+
+                console.log(`Salvando alterações para Perfil ID: ${perfilId}`);
+                console.log('Nome:', nomePerfil);
+                console.log('Permissões:', permissoesMarcadas);
+
+                try {
+                   // TODO: Implementar fetch PUT/PATCH para /api/perfis/:id com os dados
+                   console.warn(`TODO: Implementar fetch PUT/PATCH para salvar perfil ID: ${perfilId}`);
+                   // Exemplo:
+                   // const response = await fetch(`/api/perfis/${perfilId}`, {
+                   //     method: 'PUT',
+                   //     headers: { 'Content-Type': 'application/json' },
+                   //     body: JSON.stringify({ nome: nomePerfil, permissoes: permissoesMarcadas })
+                   // });
+                   // if (!response.ok) throw new Error('Falha ao salvar');
+
+                   alert(`Formulário Editar Grupo ${perfilId} enviado (simulação)! Fechando modal.`);
+                   // TODO: Idealmente, recarregar a lista de grupos ou atualizar a linha/card específico
+                   closeEditGroupModal();
+                   // location.reload(); // Recarrega a página inteira (simples, mas menos ideal)
+
+                } catch(error) {
+                    console.error('Erro ao salvar alterações do grupo:', error);
+                    alert('Erro ao salvar alterações. Verifique o console.');
+                }
+
             });
+        }
+
+        // --- Lógica para Excluir Grupo ---
+        const deleteGroupBtns = document.querySelectorAll('.permission-group-table .btn-delete, .permission-group-cards-mobile .btn-delete');
+
+        if (deleteGroupBtns.length > 0) {
+            deleteGroupBtns.forEach(button => {
+                button.addEventListener('click', async (event) => { // Tornar async para fetch
+                    const perfilId = event.currentTarget.dataset.perfilId;
+                    const groupNameElement = event.currentTarget.closest('tr')?.querySelector('td:first-child') || // Tabela
+                                             event.currentTarget.closest('.permission-group-card-mobile')?.querySelector('.card-header strong'); // Card
+                    const groupName = groupNameElement ? groupNameElement.textContent.trim() : 'este grupo';
+
+                    if (!perfilId) {
+                        console.error('Não foi possível encontrar o data-perfil-id no botão de excluir.');
+                        return;
+                    }
+
+                    // Confirmação do usuário
+                    if (confirm(`Tem certeza que deseja excluir o grupo "${groupName}"? Esta ação não pode ser desfeita.`)) {
+                        console.log(`Tentando excluir perfil ID: ${perfilId}`);
+                        try {
+                            // TODO: Implementar fetch DELETE para /api/perfis/:id
+                            console.warn(`TODO: Implementar fetch DELETE para excluir perfil ID: ${perfilId}`);
+                            // Exemplo:
+                            // const response = await fetch(`/api/perfis/${perfilId}`, { method: 'DELETE' });
+                            // if (!response.ok) throw new Error('Falha ao excluir');
+
+                            alert(`Grupo "${groupName}" excluído com sucesso (simulação)!`);
+                            // Remover a linha da tabela ou o card
+                             const rowToRemove = event.currentTarget.closest('tr');
+                             const cardToRemove = event.currentTarget.closest('.permission-group-card-mobile');
+                             if (rowToRemove) rowToRemove.remove();
+                             if (cardToRemove) cardToRemove.remove();
+                             // TODO: Atualizar contador de grupos, exibir mensagem se ficar vazio, etc.
+
+                        } catch (error) {
+                             console.error('Erro ao excluir o grupo:', error);
+                             alert(`Erro ao excluir o grupo "${groupName}". Verifique o console.`);
+                        }
+                    }
+                });
+            });
+        } else {
+             console.warn("Nenhum botão 'Excluir Grupo' encontrado.");
         }
 
     });

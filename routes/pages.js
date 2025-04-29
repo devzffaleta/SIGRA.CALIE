@@ -16,12 +16,7 @@ router.get('/test-sidebar', pagesController.getTestSidebarPage);
 // Novas rotas
 router.get('/configuracao-sistema', pagesController.getConfiguracaoSistemaPage);
 router.get('/gerenciamento-usuarios', pagesController.getGerenciamentoUsuariosPage);
-router.get('/grupo-permissoes', pagesController.getGrupoPermissoesPage);
-router.get('/gerenciamento-sgas', pagesController.getGerenciamentoSgasPage);
-
-// Rotas para Gerenciamento de Regionais e Cooperativas
-router.get('/gerenciamento-regionais', pagesController.getGerenciamentoRegionaisPage);
-router.get('/gerenciamento-cooperativas', pagesController.getGerenciamentoCooperativasPage);
+// router.get('/grupo-permissoes', pagesController.getGrupoPermissoesPage);
 
 // Adicionar outras rotas de páginas genéricas aqui se necessário
 

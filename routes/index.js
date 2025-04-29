@@ -3,6 +3,7 @@
 import express from 'express';
 import authRoutes from './auth.js';
 import pagesRouter from './pages.js';
+import perfilRoutes from './perfilRoutes.js';
 // const userRoutes = require('./users'); // Exemplo: importar outras rotas
 // const pageRoutes = require('./pages'); // Exemplo: rotas de páginas gerais
 
@@ -13,6 +14,9 @@ router.use('/', authRoutes);
 
 // Monta as rotas de páginas genéricas (ex: /test-sidebar)
 router.use('/', pagesRouter);
+
+// Monta as rotas de gerenciamento de grupos (perfis)
+router.use('/', perfilRoutes);
 
 // Monta outras rotas em seus respectivos prefixos (exemplo)
 // router.use('/usuarios', userRoutes);
