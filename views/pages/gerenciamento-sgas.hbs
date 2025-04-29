@@ -1,0 +1,292 @@
+{{!< layouts/main}}
+
+{{#section 'css'}}
+    {{!-- <link rel="stylesheet" href="/css/gerenciamento-tabelas.css"> --}} {{!-- REMOVIDO/SUBSTITUÍDO --}}
+    <link rel="stylesheet" href="/css/gerenciamento-usuarios.css"> {{!-- REUTILIZANDO ESTILOS --}}
+    <link rel="stylesheet" href="/css/gerenciamento-sgas.css"> {{!-- ARQUIVO PARA ESTILOS ESPECÍFICOS --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> {{!-- Manter FontAwesome --}}
+{{/section}}
+
+<h1>{{pageTitle}}</h1>
+
+{{!-- Botão Adicionar --}}
+<div class="user-actions"> {{!-- Reutilizando classe de gerenciamento-usuarios --}}
+    <button class="btn btn-primary btn-add-sga"> <i class="fas fa-plus"></i> Novo SGA</button>
+</div>
+
+{{!-- Tabela para Desktop --}}
+<div class="user-table-wrapper desktop-only">
+    <table class="user-table"> {{!-- Reutilizando classes --}}
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Usuário Responsável</th> {{!-- NOVA COLUNA --}}
+                <th>Horário Sincronização</th> {{!-- NOVA COLUNA --}}
+                <th>Status</th> {{!-- NOVA COLUNA --}}
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#if sgas}}
+                {{#each sgas}}
+                    <tr>
+                        <td>
+                            <i class="fas fa-database me-2 text-primary"></i> {{!-- Mantendo o ícone --}}
+                            {{this.nome}}
+                        </td>
+                        <td>{{this.usuarioResponsavel}}</td> {{!-- NOVO DADO --}}
+                        <td>{{this.horarioSincronizacao}}</td> {{!-- NOVO DADO --}}
+                        <td>
+                            {{#if this.status}}
+                                <span class="status-{{toLowerCase this.status}}">{{this.status}}</span>
+                            {{else}}
+                                <span class="status-desconhecido">Desconhecido</span> {{!-- Fallback --}}
+                            {{/if}}
+                        </td> {{!-- NOVO DADO + CLASSE --}}
+                        <td class="actions">
+                            {{!-- Botão Editar --}}
+                            <button 
+                                class="btn btn-sm btn-edit btn-edit-sga" 
+                                title="Editar"
+                                data-sga-id="{{this.id}}" 
+                                data-sga-nome="{{this.nome}}" 
+                                data-sga-token="{{this.token}}"
+                                data-sga-url-base="{{this.urlBase}}"
+                                data-sga-usuario-api="{{this.usuarioApi}}"
+                                {{!-- data-sga-senha-api="{{this.senhaApi}}" NÃO passar senha via data attribute --}}
+                                data-sga-usuario-responsavel="{{this.usuarioResponsavelId}}" {{!-- Assumindo que temos um ID --}}
+                                data-sga-horario-sincronizacao="{{this.horarioSincronizacao}}"
+                                data-sga-status="{{this.status}}"
+                                data-sga-versao-api="{{this.versaoApi}}"
+                            >
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            {{!-- Botão Excluir --}}
+                            <button 
+                                class="btn btn-sm btn-delete btn-delete-sga" 
+                                title="Excluir" 
+                                data-sga-id="{{this.id}}" 
+                                data-sga-nome="{{this.nome}}"
+                            >
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                {{/each}}
+            {{else}}
+                <tr>
+                    <td colspan="5" class="no-users-message">Nenhum SGA configurado.</td> {{!-- colspan="5" --}}
+                </tr>
+            {{/if}}
+        </tbody>
+    </table>
+</div>
+
+{{!-- Cards para Mobile --}}
+<div class="user-cards-mobile mobile-only">
+    {{#if sgas}}
+        {{#each sgas}}
+            <div class="user-card-mobile">
+                <div class="card-header">
+                    <strong><i class="fas fa-database me-2 text-primary"></i> {{this.nome}}</strong>
+                    <div class="card-actions">
+                        {{!-- Botão Editar --}}
+                         <button 
+                            class="btn btn-sm btn-edit btn-edit-sga" 
+                            title="Editar"
+                            data-sga-id="{{this.id}}" 
+                            data-sga-nome="{{this.nome}}" 
+                            data-sga-token="{{this.token}}"
+                            data-sga-url-base="{{this.urlBase}}"
+                            data-sga-usuario-api="{{this.usuarioApi}}"
+                            {{!-- data-sga-senha-api="{{this.senhaApi}}" --}}
+                            data-sga-usuario-responsavel="{{this.usuarioResponsavelId}}"
+                            data-sga-horario-sincronizacao="{{this.horarioSincronizacao}}"
+                            data-sga-status="{{this.status}}"
+                            data-sga-versao-api="{{this.versaoApi}}"
+                        >
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        {{!-- Botão Excluir --}}
+                        <button 
+                            class="btn btn-sm btn-delete btn-delete-sga" 
+                            title="Excluir" 
+                            data-sga-id="{{this.id}}" 
+                            data-sga-nome="{{this.nome}}"
+                        >
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p><strong>Responsável:</strong> {{this.usuarioResponsavel}}</p>
+                    <p><strong>Sincronização:</strong> {{this.horarioSincronizacao}}</p>
+                    <p><strong>Status:</strong> 
+                        {{#if this.status}}
+                            <span class="status-{{toLowerCase this.status}}">{{this.status}}</span>
+                        {{else}}
+                            <span class="status-desconhecido">Desconhecido</span> {{!-- Fallback --}}
+                        {{/if}}
+                    </p>
+                </div>
+            </div>
+        {{/each}}
+    {{else}}
+        <p class="no-users-message">Nenhum SGA configurado.</p>
+    {{/if}}
+</div>
+
+{{!-- ********** INCLUSÃO DO MODAL SGA (VIA PARCIAL) ********** --}}
+{{!-- Revertendo novamente para a forma simples, que deveria funcionar com registerPartials --}}
+{{> modal-sga }}
+
+{{#section 'js'}}
+    {{!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> --}} {{!-- REMOVER BOOTSTRAP JS --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Seletores ---
+            const modalSga = document.getElementById('modal-sga');
+            const modalSgaLabel = document.getElementById('modal-sga-label');
+            const formSga = document.getElementById('form-sga');
+            const sgaIdInput = document.getElementById('sgaId');
+            const sgaNomeInput = document.getElementById('sgaNome');
+            const sgaUsuarioResponsavelSelect = document.getElementById('sgaUsuarioResponsavel');
+            const sgaUrlBaseInput = document.getElementById('sgaUrlBase');
+            const sgaVersaoApiInput = document.getElementById('sgaVersaoApi');
+            const sgaUsuarioApiInput = document.getElementById('sgaUsuarioApi');
+            const sgaSenhaApiInput = document.getElementById('sgaSenhaApi'); // Usar com cuidado!
+            const sgaHorarioSincInput = document.getElementById('sgaHorarioSinc');
+            const sgaStatusSelect = document.getElementById('sgaStatus');
+            const sgaTokenInput = document.getElementById('sgaToken');
+            const btnCopyToken = document.getElementById('btn-copy-token'); // NOVO
+
+            const btnAddSga = document.querySelector('.btn-add-sga');
+            const btnCloseModalSga = document.getElementById('close-modal-sga-btn');
+            const btnCancelModalSga = document.getElementById('cancel-modal-sga-btn');
+            const btnsEditSga = document.querySelectorAll('.btn-edit-sga');
+            const btnsDeleteSga = document.querySelectorAll('.btn-delete-sga');
+
+            // --- Funções Auxiliares ---
+            const openModal = () => modalSga?.classList.remove('hidden');
+            const closeModal = () => modalSga?.classList.add('hidden');
+
+            const resetForm = () => {
+                formSga?.reset();
+                sgaIdInput.value = ''; // Limpa o ID oculto
+                 // Resetar especificamente a senha para evitar preenchimento automático indesejado
+                sgaSenhaApiInput.value = ''; 
+            };
+
+            const populateForm = (button) => {
+                 resetForm(); // Começa limpando
+                sgaIdInput.value = button.dataset.sgaId || '';
+                sgaNomeInput.value = button.dataset.sgaNome || '';
+                sgaUsuarioResponsavelSelect.value = button.dataset.sgaUsuarioResponsavel || '';
+                sgaUrlBaseInput.value = button.dataset.sgaUrlBase || '';
+                sgaVersaoApiInput.value = button.dataset.sgaVersaoApi || '';
+                sgaUsuarioApiInput.value = button.dataset.sgaUsuarioApi || '';
+                // NÃO preencher a senha a partir do data attribute. 
+                // O usuário deve digitá-la novamente se quiser alterá-la.
+                sgaSenhaApiInput.value = ''; // Deixar vazio intencionalmente
+                sgaSenhaApiInput.placeholder = 'Digite a nova senha para alterar'; // Dar dica
+                sgaHorarioSincInput.value = button.dataset.sgaHorarioSincronizacao || '';
+                sgaStatusSelect.value = button.dataset.sgaStatus || 'Ativo'; // Default Ativo se não vier
+                sgaTokenInput.value = button.dataset.sgaToken || '';
+                 modalSgaLabel.textContent = 'Editar SGA';
+                openModal();
+            };
+
+            // --- Event Listeners ---
+
+            // NOVO: Copiar Token para Clipboard
+            btnCopyToken?.addEventListener('click', () => {
+                if (!sgaTokenInput || !navigator.clipboard) {
+                    console.error('Textarea do token ou API Clipboard não disponíveis.');
+                    alert('Não foi possível copiar o token.');
+                    return;
+                }
+                const tokenValue = sgaTokenInput.value;
+                if (tokenValue) {
+                    navigator.clipboard.writeText(tokenValue)
+                        .then(() => {
+                            // Feedback visual temporário (opcional)
+                            const originalIcon = btnCopyToken.innerHTML;
+                            btnCopyToken.innerHTML = '<i class="fas fa-check"></i>'; 
+                            setTimeout(() => {
+                                btnCopyToken.innerHTML = originalIcon;
+                            }, 1500); 
+                            // console.log('Token copiado!'); 
+                        })
+                        .catch(err => {
+                            console.error('Erro ao copiar token: ', err);
+                            alert('Falha ao copiar o token.');
+                        });
+                } else {
+                    alert('O campo Token está vazio.');
+                }
+            });
+
+            // Abrir Modal para Novo SGA
+            btnAddSga?.addEventListener('click', () => {
+                 resetForm();
+                 modalSgaLabel.textContent = 'Novo SGA';
+                 sgaSenhaApiInput.placeholder = ''; // Reset placeholder da senha
+                 openModal();
+            });
+
+            // Abrir Modal para Editar SGA
+            btnsEditSga.forEach(button => {
+                button.addEventListener('click', () => populateForm(button));
+            });
+
+            // Fechar Modal (Botão X, Cancelar, Overlay)
+            btnCloseModalSga?.addEventListener('click', closeModal);
+            btnCancelModalSga?.addEventListener('click', closeModal);
+            modalSga?.addEventListener('click', (event) => {
+                if (event.target === modalSga) { // Clicou no overlay
+                    closeModal();
+                }
+            });
+
+            // Submit do Formulário
+            formSga?.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const sgaId = sgaIdInput.value;
+                const action = sgaId ? 'Editado' : 'Criado';
+                console.log(`Formulário SGA ${action} (simulado) - ID: ${sgaId || 'Novo'}`);
+                
+                // Exemplo de como pegar os dados (NÃO ENVIAR SENHA EM LOGS REAIS)
+                const formData = new FormData(formSga);
+                 console.log('Dados do formulário:');
+                 for (let [key, value] of formData.entries()) {
+                     // Cuidado com a senha em logs! Em produção, NUNCA logar senhas.
+                    if (key === 'senhaApi' && value) {
+                         console.log(`${key}: ********`); 
+                    } else {
+                        console.log(`${key}: ${value}`);
+                    }
+                }
+
+                alert(`SGA ${action} com sucesso! (Simulação)`); // Feedback simples
+                closeModal();
+                // TODO: Aqui iria a lógica fetch para enviar ao backend
+                // TODO: Atualizar a tabela/cards dinamicamente após sucesso
+            });
+
+            // Excluir SGA
+            btnsDeleteSga.forEach(button => {
+                button.addEventListener('click', () => {
+                    const sgaId = button.dataset.sgaId;
+                    const sgaNome = button.dataset.sgaNome;
+                    if (confirm(`Tem certeza que deseja excluir o SGA "${sgaNome}" (ID: ${sgaId})?`)) {
+                        console.log(`Excluir SGA ID: ${sgaId} (simulado)`);
+                        alert(`SGA "${sgaNome}" excluído! (Simulação)`);
+                        // TODO: Lógica fetch para exclusão no backend
+                        // TODO: Remover a linha/card da UI após sucesso
+                    }
+                });
+            });
+
+        });
+    </script>
+{{/section}} 

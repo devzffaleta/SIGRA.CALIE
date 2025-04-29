@@ -6,12 +6,31 @@ import { fileURLToPath } from 'url'; // Necessário para obter __dirname
 import hbs from 'hbs';
 import dotenv from 'dotenv';
 import session from 'express-session'; // <<< Importar express-session
+import fs from 'fs'; // <<< Importar fs para ler o parcial manualmente
 
 // require('dotenv').config(); // <<<< REMOVER ESTA LINHA
 
-// Registrar Helper de Igualdade (eq)
-hbs.registerHelper('eq', function (a, b) {
-    return a === b;
+// <<< Obter __dirname em Módulos ES (precisamos antes para ler o parcial) >>>
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// <<< Tentar registrar o parcial manualmente ANTES do registerPartials >>>
+try {
+    const modalSgaPath = path.join(__dirname, 'views', 'partials', 'modal-sga.hbs');
+    const modalSgaContent = fs.readFileSync(modalSgaPath, 'utf8');
+    hbs.registerPartial('modal-sga', modalSgaContent);
+    console.log('Parcial modal-sga registrado manualmente.');
+} catch (err) {
+    console.error('Erro ao registrar manualmente o parcial modal-sga:', err);
+}
+
+// Registrar Helper de Igualdade (eq) - CORRIGIDO para Block Helper
+hbs.registerHelper('eq', function (a, b, options) {
+    if (a === b) {
+        return options.fn(this); // Executa o bloco principal (if)
+    } else {
+        return options.inverse(this); // Executa o bloco {{else}}
+    }
 });
 
 // Registrar Helper toLowerCase
@@ -30,10 +49,6 @@ hbs.registerHelper('section', function(name, options) {
 });
 
 dotenv.config(); // Carregar variáveis de ambiente (esta linha já faz o trabalho)
-
-// Obter __dirname em Módulos ES
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Importar o agregador de rotas
 import mainRouter from './routes/index.js'; // Exemplo: Assumindo que routes/index.js exporta default

@@ -1,0 +1,227 @@
+{{!< layouts/main}}
+
+{{#section 'css'}}
+    {{!-- <link rel="stylesheet" href="/css/gerenciamento-cooperativas.css"> --}} {{!-- Removido --}}
+    <link rel="stylesheet" href="/css/gerenciamento-tabelas.css"> {{!-- Adicionado CSS Comum --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+     {{!-- Bloco <style> removido --}}
+{{/section}}
+
+<h1>{{pageTitle}}</h1>
+
+<div class="add-button-container">
+    {{!-- Botão já usa a classe .btn-add do novo CSS --}}
+    <a href="#" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#modalCooperativa">
+        <i class="fas fa-plus"></i> Nova Cooperativa
+    </a>
+</div>
+
+{{!-- Removido table-striped --}}
+<table class="table table-bordered"> 
+    <thead>
+        <tr>
+            <th>Razão Social</th>
+            <th>Nome Fantasia</th>
+            <th>CNPJ</th>
+            <th>Regional</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#if cooperativas}}
+            {{#each cooperativas}}
+                <tr>
+                    <td>{{this.razaoSocial}}</td>
+                    <td>{{this.nomeFantasia}}</td>
+                    <td>{{this.cnpj}}</td>
+                    <td>{{this.regionalNome}}</td> 
+                    <td>{{this.telefone}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.status}}</td> {{!-- Simplificado para exibir texto direto --}}
+                    <td class="table-actions">
+                        {{!-- Botão Editar com novo estilo de ícone --}}
+                        <button title="Editar" data-bs-toggle="modal" data-bs-target="#modalCooperativa">
+                            <i class="fas fa-pencil-alt icon-edit"></i>
+                        </button>
+                        {{#eq this.status "Ativo"}}
+                            {{!-- Botão Desativar com novo estilo de ícone --}}
+                            <button title="Desativar"> 
+                                <i class="fas fa-toggle-off icon-toggle-active"></i>
+                            </button>
+                        {{else}}
+                             {{!-- Botão Ativar com novo estilo de ícone --}}
+                            <button title="Ativar"> 
+                                <i class="fas fa-toggle-on icon-toggle-inactive"></i>
+                            </button>
+                        {{/eq}}
+                    </td>
+                </tr>
+            {{/each}}
+        {{else}}
+            <tr>
+                <td colspan="8" class="text-center">Nenhuma cooperativa encontrada.</td>
+            </tr>
+        {{/if}}
+    </tbody>
+</table>
+
+{{!-- Modal para Criar/Editar Cooperativa --}}
+<div class="modal fade" id="modalCooperativa" tabindex="-1" aria-labelledby="modalCooperativaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCooperativaLabel">Adicionar/Editar Cooperativa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCooperativa"> 
+                    <input type="hidden" id="cooperativaId" name="id">
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="coopRazaoSocial" class="form-label">Razão Social <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="coopRazaoSocial" name="razaoSocial" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="coopNomeFantasia" class="form-label">Nome Fantasia</label>
+                            <input type="text" class="form-control" id="coopNomeFantasia" name="nomeFantasia">
+                        </div>
+                    </div>
+
+                     <div class="row mb-3">
+                         <div class="col-md-6">
+                            <label for="coopCnpj" class="form-label">CPF ou CNPJ <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="coopCnpj" name="cnpj" required>
+                        </div>
+                        {{!-- Campo Select para Regional --}}
+                        <div class="col-md-6">
+                             <label for="coopRegionalId" class="form-label">Regional <span class="text-danger">*</span></label>
+                            <select class="form-select" id="coopRegionalId" name="regionalId" required>
+                                <option value="" selected disabled>Selecione uma Regional</option>
+                                {{#if regionaisDisponiveis}}
+                                    {{#each regionaisDisponiveis}}
+                                        <option value="{{this.id}}">{{this.nomeFantasia}}</option>
+                                    {{/each}}
+                                {{/if}}
+                            </select>
+                        </div>
+                    </div>
+
+                     <div class="row mb-3">
+                         <div class="col-md-6">
+                            <label for="coopTelefone" class="form-label">Telefone</label>
+                            <input type="tel" class="form-control" id="coopTelefone" name="telefone">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="coopEmail" class="form-label">E-mail</label>
+                            <input type="email" class="form-control" id="coopEmail" name="email">
+                        </div>
+                    </div>
+                     <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="coopRepresentante" class="form-label">Representante</label>
+                            <input type="text" class="form-control" id="coopRepresentante" name="representante">
+                        </div>
+                    </div>
+
+                    <hr>
+                    <h5>Endereço</h5>
+                     <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label for="coopLogradouro" class="form-label">Logradouro</label>
+                            <input type="text" class="form-control" id="coopLogradouro" name="logradouro">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="coopNumero" class="form-label">Número</label>
+                            <input type="text" class="form-control" id="coopNumero" name="numero">
+                        </div>
+                    </div>
+                     <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="coopComplemento" class="form-label">Complemento</label>
+                            <input type="text" class="form-control" id="coopComplemento" name="complemento">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="coopBairro" class="form-label">Bairro</label>
+                            <input type="text" class="form-control" id="coopBairro" name="bairro">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                         <div class="col-md-5">
+                            <label for="coopCidade" class="form-label">Cidade</label>
+                            <input type="text" class="form-control" id="coopCidade" name="cidade">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="coopEstado" class="form-label">Estado</label>
+                            <input type="text" class="form-control" id="coopEstado" name="estado" maxlength="2">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="coopCep" class="form-label">CEP</label>
+                            <input type="text" class="form-control" id="coopCep" name="cep">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="submit" form="formCooperativa" class="btn btn-primary">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{!-- Fim Modal Cooperativa --}}
+
+{{#section 'js'}}
+     {{!-- Idealmente, o JS do Bootstrap já estaria no layout main.hbs --}}
+    {{!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> --}} {{!-- REMOVIDO - Agora está no main.hbs --}}
+    {{!-- <script src="/js/gerenciamento-cooperativas.js"></script> --}}
+
+     <script>
+        const modalCooperativa = new bootstrap.Modal(document.getElementById('modalCooperativa'));
+        const formCooperativa = document.getElementById('formCooperativa');
+        const modalCooperativaLabel = document.getElementById('modalCooperativaLabel');
+
+        // Abrir modal para NOVA cooperativa
+        document.querySelector('.btn-add').addEventListener('click', (event) => {
+            event.preventDefault();
+            formCooperativa.reset();
+            document.getElementById('cooperativaId').value = '';
+            modalCooperativaLabel.textContent = 'Nova Cooperativa';
+            modalCooperativa.show();
+        });
+
+        // Abrir modal para EDITAR cooperativa (Exemplo básico)
+        document.querySelectorAll('.btn-edit').forEach(button => {
+            button.addEventListener('click', (event) => {
+                formCooperativa.reset();
+                modalCooperativaLabel.textContent = 'Editar Cooperativa';
+
+                 // Exemplo simulado de preenchimento
+                document.getElementById('cooperativaId').value = '456'; // ID Fixo
+                document.getElementById('coopRazaoSocial').value = 'Cooperativa Exemplo Edit Ltda';
+                document.getElementById('coopNomeFantasia').value = 'Coop Edit';
+                document.getElementById('coopCnpj').value = '99.999.999/0001-99';
+                document.getElementById('coopRegionalId').value = '2'; // Pré-seleciona Regional Sudeste (Exemplo)
+                 // ... preencher outros campos de forma similar ...
+
+                modalCooperativa.show();
+            });
+        });
+
+         // Lidar com o submit do formulário (Apenas loga por enquanto)
+        formCooperativa.addEventListener('submit', (event) => {
+            event.preventDefault(); 
+            console.log('Formulário Cooperativa submetido (simulado)');
+            const formData = new FormData(formCooperativa);
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+            modalCooperativa.hide(); 
+        });
+
+    </script>
+{{/section}} 
