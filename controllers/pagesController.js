@@ -126,19 +126,37 @@ export async function getGerenciamentoSgasPage(req, res, next) {
 /**
  * Renderiza a Página de Gerenciamento de Regionais
  */
-export function getGerenciamentoRegionaisPage(req, res, next) {
+export async function getGerenciamentoRegionaisPage(req, res, next) {
     try {
-        // Dados Mock para Regionais
-        const mockRegionais = [
-            { id: 1, razaoSocial: 'Central Regional Sul LTDA', nomeFantasia: 'Regional Sul', cnpj: '33.333.333/0001-33', status: 'Ativo', telefone: '(51) 9999-8888', email: 'contato@regionalsul.com.br', representante: 'Carlos Silva' },
-            { id: 2, razaoSocial: 'Central Regional Sudeste S/A', nomeFantasia: 'Regional Sudeste', cnpj: '44.444.444/0001-44', status: 'Ativo', telefone: '(21) 9888-7777', email: 'contato@regionalsudeste.com.br', representante: 'Maria Oliveira' },
-            { id: 3, razaoSocial: 'Central Regional Norte', nomeFantasia: 'Regional Norte', cnpj: '55.555.555/0001-55', status: 'Inativo', telefone: '(91) 9777-6666', email: 'contato@regionalnorte.com.br', representante: 'João Pereira' }
+        // TODO: Buscar dados reais das Regionais do banco
+        /*
+        const regionais = await db.Regional.findAll({
+            // Adicionar atributos e condições conforme necessário
+            order: [['nomeFantasia', 'ASC']]
+        });
+        const regionaisData = regionais.map(r => ({
+            id: r.regional_pk,
+            razaoSocial: r.razao_social,
+            nomeFantasia: r.nome_fantasia,
+            cnpj: r.cnpj, // Formatar
+            telefone: r.telefone, // Formatar
+            email: r.email,
+            status: r.ativo ? 'Ativo' : 'Inativo'
+            // ... outros campos ...
+        }));
+        */
+
+        // Dados de exemplo por enquanto:
+        const regionaisData = [
+            { id: 'reg1', razaoSocial: 'Regional Sul Agropecuária Ltda', nomeFantasia: 'Regional Sul', cnpj: '33.333.333/0001-33', telefone: '(48) 3232-0001', email: 'sul@regional.coop.br', status: 'Ativo' },
+            { id: 'reg2', razaoSocial: 'Regional Sudeste Comercial SA', nomeFantasia: 'Regional Sudeste', cnpj: '44.444.444/0001-44', telefone: '(11) 4545-0002', email: 'sudeste@regional.coop.br', status: 'Ativo' },
+            { id: 'reg3', razaoSocial: 'Regional Norte Serviços Coop', nomeFantasia: 'Regional Norte', cnpj: '55.555.555/0001-55', telefone: '(92) 3636-0003', email: 'norte@regional.coop.br', status: 'Inativo' }
         ];
 
         res.render('pages/gerenciamento-regionais', {
             pageTitle: 'Gerenciamento de Regionais',
-            layout: 'layouts/main',
-            regionais: mockRegionais
+            regionais: regionaisData,
+            layout: 'layouts/main'
         });
     } catch (error) {
         console.error('[getGerenciamentoRegionaisPage] Erro:', error);
@@ -149,31 +167,66 @@ export function getGerenciamentoRegionaisPage(req, res, next) {
 /**
  * Renderiza a Página de Gerenciamento de Cooperativas
  */
-export function getGerenciamentoCooperativasPage(req, res, next) {
+export async function getGerenciamentoCooperativasPage(req, res, next) {
     try {
-         // Dados Mock para Regionais (necessário para o formulário de Cooperativa)
-        const mockRegionaisDisponiveis = [
-            { id: 1, nomeFantasia: 'Regional Sul' },
-            { id: 2, nomeFantasia: 'Regional Sudeste' },
-            { id: 3, nomeFantasia: 'Regional Norte' } // Mesmo que inativa, pode aparecer no select? A definir.
-        ];
+        // TODO: Buscar dados reais das Cooperativas e Regionais do banco
+        // Exemplo de como buscar cooperativas (adaptar conforme seu modelo):
+        /*
+        const cooperativas = await db.Cooperativa.findAll({
+            include: [{
+                model: db.Regional, // Assumindo modelo Regional
+                as: 'regional',    // Alias da associação
+                attributes: ['nomeFantasia'] // Ou outro campo relevante
+            }],
+            raw: false,
+            nest: true
+        });
 
-        // Dados Mock para Cooperativas
-        const mockCooperativas = [
-            { id: 1, razaoSocial: 'Cooperativa Alfa Ltda', nomeFantasia: 'Coop Alfa', cnpj: '11.111.111/0001-11', regionalId: 1, regionalNome: 'Regional Sul', status: 'Ativo', telefone: '(51) 3333-4444', email: 'contato@alfa.coop.br', representante: 'Ana Souza' },
-            { id: 2, razaoSocial: 'Cooperativa Beta SA', nomeFantasia: 'Coop Beta', cnpj: '22.222.222/0001-22', regionalId: 2, regionalNome: 'Regional Sudeste', status: 'Inativo', telefone: '(21) 2222-1111', email: 'contato@beta.coop.br', representante: 'Pedro Martins' },
-            { id: 3, razaoSocial: 'Cooperativa Gama Ltda', nomeFantasia: 'Coop Gama', cnpj: '66.666.666/0001-66', regionalId: 1, regionalNome: 'Regional Sul', status: 'Ativo', telefone: '(51) 5555-6666', email: 'contato@gama.coop.br', representante: 'Sofia Lima' }
-        ];
+        const cooperativasData = cooperativas.map(coop => ({
+            id: coop.cooperativa_pk,
+            razaoSocial: coop.razao_social,
+            nomeFantasia: coop.nome_fantasia,
+            cnpj: coop.cnpj, // Formatar CNPJ se necessário
+            regionalNome: coop.regional?.nomeFantasia || 'N/A',
+            telefone: coop.telefone, // Formatar telefone
+            email: coop.email,
+            status: coop.ativo ? 'Ativo' : 'Inativo' // Mapear status
+            // Adicionar outros campos se necessário
+        }));
+        */
 
+        // TODO: Buscar dados reais das Regionais para o select
+        /*
+        const regionais = await db.Regional.findAll({ 
+            attributes: ['id', 'nomeFantasia'], // Campos necessários para o select
+            where: { ativo: true } // Exemplo: buscar apenas regionais ativas
+        });
+        const regionaisDisponiveisData = regionais.map(r => r.toJSON());
+        */
+
+        // Dados de exemplo por enquanto:
+        const cooperativasData = [
+            { id: 'coop1', razaoSocial: 'Cooperativa Agro Exemplo Ltda', nomeFantasia: 'CoopAgro', cnpj: '11.111.111/0001-11', regionalNome: 'Regional Sul', telefone: '(48) 99999-1111', email:'contato@coopagro.com', status: 'Ativo' },
+            { id: 'coop2', razaoSocial: 'Central de Crédito Exemplo', nomeFantasia: 'CredEx', cnpj: '22.222.222/0001-22', regionalNome: 'Regional Sudeste', telefone:'(11) 98888-2222', email:'adm@credex.coop.br', status: 'Inativo' }
+        ];
+        const regionaisDisponiveisData = [
+            { id: '1', nomeFantasia: 'Regional Sul' },
+            { id: '2', nomeFantasia: 'Regional Sudeste' },
+            { id: '3', nomeFantasia: 'Regional Nordeste' }
+        ];
 
         res.render('pages/gerenciamento-cooperativas', {
             pageTitle: 'Gerenciamento de Cooperativas',
-            layout: 'layouts/main',
-            cooperativas: mockCooperativas,
-            regionaisDisponiveis: mockRegionaisDisponiveis // Para popular o <select> no formulário
+            cooperativas: cooperativasData,
+            regionaisDisponiveis: regionaisDisponiveisData,
+            layout: 'layouts/main'
         });
     } catch (error) {
         console.error('[getGerenciamentoCooperativasPage] Erro:', error);
         next(error);
     }
-} 
+}
+
+/* REMOVIDO: Esta função foi movida para perfilController.js e a rota usa /gerenciamento-grupos
+// ... (código antigo comentado)
+*/ 
