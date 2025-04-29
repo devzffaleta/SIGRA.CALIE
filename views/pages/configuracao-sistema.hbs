@@ -20,7 +20,7 @@
         </div>
     </a>
 
-    {{!-- Card 5: Grupo de Permissões (movido para cá) --}}
+    {{!-- Card 2: Grupo de Permissões (movido para cá) --}}
     <a href="/grupo-permissoes" class="config-card-link">
         <div class="config-card card-permissoes" style="background-color: #D1FAE5;"> 
             <i class="fas fa-key card-icon" style="color: #047857;"></i> 
@@ -31,32 +31,49 @@
         </div>
     </a>
 
-    {{!-- Card 2: Configuração de SGAs --}}
-    <div class="config-card card-sgas">
-        <i class="fas fa-database card-icon"></i> {{!-- Usando fas fa-database como alternativa --}}
-        <div class="card-content">
-            <h3>Configuração de SGAs</h3>
-            <p>Configure as credenciais para integração com a API do SGA, permitindo a importação automática de dados.</p>
+    {{!-- Card 3: Configuração de SGAs --}}
+    <a href="/gerenciamento-sgas" class="config-card-link">
+        <div class="config-card card-sgas">
+            <i class="fas fa-database card-icon"></i> {{!-- Usando fas fa-database como alternativa --}}
+            <div class="card-content">
+                <h3>Gerenciamento de SGAs</h3>
+                <p>Configure as credenciais para integração com a API do SGA, permitindo a importação automática de dados.</p>
+            </div>
         </div>
-    </div>
+    </a>
 
-    {{!-- Card 3: Configurações do Sistema --}}
-    <div class="config-card card-sistema">
-            <i class="fas fa-cogs card-icon"></i> {{!-- Usando fas fa-cogs --}}
-        <div class="card-content">
-            <h3>Configurações do Sistema</h3>
-            <p>Ajuste as configurações gerais do sistema, incluindo regras de categorização dos associados.</p>
+    {{!-- Card 4: Gerenciamento de Cooperativas --}}
+    <a href="/gerenciamento-cooperativas" class="config-card-link">
+        <div class="config-card card-cooperativas">
+            <i class="fas fa-building card-icon"></i>
+            <div class="card-content">
+                <h3>Gerenciamento de Cooperativas</h3>
+                <p>Crie, edite e gerencie informações das cooperativas, incluindo dados de contato e configurações.</p>
+            </div>
         </div>
-    </div>
+    </a>
+    
+    {{!-- Card 5: Gerenciamento de Regionais --}}
+    <a href="/gerenciamento-regionais" class="config-card-link">
+        <div class="config-card card-regionais">
+            <i class="fas fa-map-marker-alt card-icon"></i>
+            <div class="card-content">
+                <h3>Gerenciamento de Regionais</h3>
+                <p>Crie, edite e gerencie informações das regionais, incluindo dados de contato e configurações.</p>
+            </div>
+        </div>
+    </a>
 
-    {{!-- Card 4: Sincronização de Dados --}}
-    <div class="config-card card-sync">
-        <i class="fas fa-sync-alt card-icon"></i> {{!-- Usando fas fa-sync-alt --}}
-        <div class="card-content">
-            <h3>Sincronização de Dados</h3>
-            <p>Execute manualmente a sincronização de dados com os SGAs configurados.</p>
-        </div>
-    </div>
+    {{!-- Card 6: Gerenciamento de Voluntários --}}
+    <a href="/gerenciamento-voluntarios" class="config-card-link">
+        <div class="config-card card-voluntarios">
+            <i class="fas fa-user-plus card-icon"></i>
+            <div class="card-content">
+                <h3>Gerenciamento de Voluntários</h3>
+                <p>Crie, edite e gerencie informações dos voluntários, incluindo dados de contato e configurações.</p>
+            </div>
+        </div>  
+    </a>
 </div>
 
 {{!-- Seção de Informações do Sistema --}}

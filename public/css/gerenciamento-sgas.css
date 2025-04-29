@@ -1,0 +1,140 @@
+/* Estilos específicos para a página de Gerenciamento de SGAs */
+
+/* Importante: Assumindo que gerenciamento-usuarios.css já define
+   .modal-overlay, .modal-content, .modal-header, .modal-body, .modal-footer,
+   .form-row, .form-group, inputs básicos, selects básicos, botões, etc.
+   Adicionamos aqui apenas os ajustes específicos ou estilos não cobertos. */
+
+/* NOVO: Forçar TODOS os inputs, selects, textareas a ocuparem 100% da largura */
+#modal-sga .form-group input[type="text"],
+#modal-sga .form-group input[type="password"],
+#modal-sga .form-group input[type="number"],
+#modal-sga .form-group select,
+#modal-sga .form-group textarea {
+    width: 100% !important;       /* Força 100% da largura do form-group */
+    max-width: 100% !important;   /* Garante que não ultrapasse */
+    box-sizing: border-box !important; /* Inclui padding/border na largura total */
+    flex: 1 1 auto !important;    /* Se estiver dentro de um flex, tenta ocupar espaço */
+
+    /* Aplicar estilos visuais comuns (padding, border, font-size, etc.) */
+    padding: 0.5rem 0.75rem !important; /* Padrão de gerenciamento-usuarios */
+    border: 1px solid #d1d5db !important; /* Padrão de gerenciamento-usuarios */
+    border-radius: 0.375rem !important; /* Padrão de gerenciamento-usuarios */
+    font-size: 0.875rem !important; /* Padrão de gerenciamento-usuarios */
+    background-color: #fff !important; /* Fundo branco */
+    color: #212529 !important; /* Cor do texto */
+    height: auto !important; /* Deixa o padding controlar a altura */
+}
+
+/* NOVO: Remover aparência padrão do Select e adicionar seta customizada */
+#modal-sga .form-group select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Adiciona uma seta SVG como background */
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236B7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.6-3.6%205.4-7.9%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 0.65em auto;
+    padding-right: 2.5rem !important; /* Espaço extra à direita para a seta não sobrepor o texto */
+}
+
+/* Correção para garantir que o select tenha altura adequada (pode ser necessário ajustar) */
+#modal-sga .form-group select {
+    line-height: 1.5; /* Ajustar conforme necessário para alinhar com inputs */
+}
+
+/* Garantir que o form-row não aplique flex que divida em colunas */
+#modal-sga .form-row {
+    display: block !important; /* Força display block */
+    width: 100% !important;   /* Garante largura total */
+    padding: 0 !important;    /* Remove padding que possa interferir */
+    margin: 0 !important;     /* Remove margem que possa interferir */
+    margin-bottom: 1rem !important; /* Adiciona espaço SÓ embaixo */
+    box-sizing: border-box !important;
+}
+
+/* Forçar form-group a ocupar 100% da largura dentro do modal SGA */
+#modal-sga .form-row .form-group {
+    display: block !important; /* Garante que o form-group seja block */
+    flex: none !important;      /* Remove qualquer regra flex */
+    flex-basis: auto !important; /* Reseta base flex */
+    width: 100% !important;     /* Garante a largura */
+    max-width: 100% !important; /* Evita limitação de largura máxima */
+    padding: 0 !important;      /* Remove padding */
+    margin: 0 !important;       /* Remove margem */
+    margin-bottom: 0.5rem !important; /* Espaço padrão abaixo do grupo */
+    box-sizing: border-box !important;
+}
+
+/* Remover estilos conflitantes herdados, se houver */
+#modal-sga .form-group {
+    margin-bottom: 0.5rem !important; /* Ajusta a margem padrão do modal.css se necessário */
+}
+
+/* Estilos para Label + Botão Copiar (Token) */
+.label-with-button {
+    display: flex;
+    justify-content: space-between; /* Empurra label e botão para os lados */
+    align-items: center; /* Alinha verticalmente */
+    margin-bottom: 0.3rem; /* Espaçamento igual ao de uma label normal */
+}
+
+.label-with-button label {
+    margin-bottom: 0; /* Remover margem inferior da label aqui */
+}
+
+.btn-icon.btn-copy-token {
+    background: none;
+    border: none;
+    color: #6b7280; /* Cor cinza */
+    padding: 0.25rem;
+    cursor: pointer;
+    font-size: 0.9rem; /* Tamanho do ícone */
+    line-height: 1;
+}
+
+.btn-icon.btn-copy-token:hover {
+    color: #374151; /* Cor mais escura no hover */
+}
+
+/* Ajustes finos no modal se necessário (geralmente o .large já resolve) */
+#modal-sga .modal-content.large {}
+
+/* Garantir que o textarea ocupe a altura correta */
+#modal-sga .form-group textarea {
+    min-height: 80px; 
+    resize: vertical; 
+}
+
+/* Estilos para o campo de senha, se precisar de algo específico */
+#modal-sga .form-group input[type="password"] {}
+
+/* Responsividade específica para o modal de SGAs */
+@media (max-width: 768px) { 
+     #modal-sga .modal-content.large {
+        max-width: 95%; 
+        margin: 1rem auto; 
+    }
+
+    #modal-sga .form-group label,
+    #modal-sga .form-group input,
+    #modal-sga .form-group select,
+    #modal-sga .form-group textarea,
+    #modal-sga .form-group small {
+        font-size: 0.85rem; 
+    }
+}
+
+@media (max-width: 480px) { 
+     #modal-sga .modal-header h2 {
+        font-size: 1.1rem;
+     }
+     #modal-sga .modal-footer .btn {
+         font-size: 0.8rem;
+         padding: 0.4rem 0.8rem;
+     }
+}
+
+/* Adicionar aqui outros estilos específicos que se mostrarem necessários
+   após testar visualmente a página e o modal. */ 

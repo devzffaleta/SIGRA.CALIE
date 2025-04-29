@@ -1,0 +1,112 @@
+{{!-- views/partials/modal-sga.hbs --}}
+<div id="modal-sga" class="modal-overlay hidden"> 
+    <div class="modal-content large"> {{!-- Classe large para modal mais largo --}}
+        <div class="modal-header">
+            <h2 id="modal-sga-label">Adicionar/Editar SGA</h2> 
+            <button id="close-modal-sga-btn" class="modal-close-btn">&times;</button> 
+        </div>
+        <div class="modal-body">
+            <form id="form-sga"> 
+                 <input type="hidden" id="sgaId" name="id">
+
+                 {{!-- Linha 1: Nome --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sgaNome">Nome <span class="required">*</span></label>
+                        <input type="text" id="sgaNome" name="nome" required>
+                    </div>
+                </div>
+
+                 {{!-- Linha 2: Usuário Responsável --}}
+                <div class="form-row">
+                     <div class="form-group">
+                         <label for="sgaUsuarioResponsavel">Usuário Responsável <span class="required">*</span></label>
+                        <select id="sgaUsuarioResponsavel" name="usuarioResponsavelId" required>
+                             <option value="" disabled selected>Selecione o responsável...</option>
+                            {{!-- TODO: Popular opções de usuários (ex: vindos do backend) --}}
+                            <option value="user1">Usuário Admin 1</option>
+                             <option value="user2">Usuário Líder 2</option>
+                        </select>
+                    </div>
+                </div>
+
+                {{!-- Linha 3: URL Base API --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sgaUrlBase">URL Base API <span class="required">*</span></label>
+                        <input type="text" id="sgaUrlBase" name="urlBase" placeholder="https://api.exemplo.com/v1" required>
+                         <small>URL principal da API do SGA.</small>
+                    </div>
+                </div>
+
+                 {{!-- Linha 4: Versão API --}}
+                 <div class="form-row">
+                    <div class="form-group">
+                        <label for="sgaVersaoApi">Versão API</label>
+                        <input type="text" id="sgaVersaoApi" name="versaoApi" placeholder="Ex: 1.0.2">
+                         <small>Versão específica da API (opcional).</small>
+                    </div>
+                </div>
+                
+                {{!-- Linha 5: Usuário API --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sgaUsuarioApi">Usuário API <span class="required">*</span></label>
+                        <input type="text" id="sgaUsuarioApi" name="usuarioApi" required>
+                         <small>Usuário para autenticação na API.</small>
+                    </div>
+                 </div>
+                 
+                 {{!-- Linha 6: Senha API --}}
+                 <div class="form-row">
+                    <div class="form-group">
+                        <label for="sgaSenhaApi">Senha API <span class="required">*</span></label>
+                        {{!-- Removido wrapper input-with-adjacent-helper --}}
+                        <input type="password" id="sgaSenhaApi" name="senhaApi" required>
+                        <small>Senha para autenticação (será enviada ao backend).</small>
+                    </div>
+                </div>
+
+                {{!-- Linha 7: Horário Sinc --}}
+                 <div class="form-row">
+                     <div class="form-group">
+                        <label for="sgaHorarioSinc">Horário Sincronização</label>
+                        <input type="text" id="sgaHorarioSinc" name="horarioSincronizacao" placeholder="Ex: 02:00"> {{!-- Pode ser time ou text com validação --}}
+                         <small>Horário preferencial para sincronização diária.</small>
+                    </div>
+                 </div>
+                 
+                 {{!-- Linha 8: Status --}}
+                 <div class="form-row">
+                    <div class="form-group">
+                         <label for="sgaStatus">Status <span class="required">*</span></label>
+                        <select id="sgaStatus" name="status" required>
+                             <option value="Ativo">Ativo</option>
+                             <option value="Inativo">Inativo</option>
+                        </select>
+                    </div>
+                </div>
+
+                {{!-- Linha 9: Token --}}
+                <div class="form-row">
+                    <div class="form-group">
+                         {{!-- NOVO: Wrapper para label + botão copiar --}}
+                        <div class="label-with-button">
+                             <label for="sgaToken">Token API <span class="required">*</span></label>
+                             <button type="button" id="btn-copy-token" class="btn-icon btn-copy-token" title="Copiar Token">
+                                 <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <textarea id="sgaToken" name="token" rows="3" required></textarea>
+                         <small>Token de autenticação da API do SGA.</small>
+                    </div>
+                 </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="cancel-modal-sga-btn" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button> 
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 

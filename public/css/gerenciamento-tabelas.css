@@ -1,0 +1,97 @@
+/* Estilos Comuns para Páginas de Gerenciamento com Tabelas */
+
+/* Botão Adicionar/Novo */
+.btn-add {
+    padding: 8px 15px; /* Ajuste padding se necessário */
+    background-color: #6f42c1; /* Roxo Bootstrap (exemplo) */
+    border-color: #6f42c1;
+    color: white;
+    border-radius: 0.25rem; /* Bootstrap default */
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; /* Para alinhar ícone e texto */
+    align-items: center;
+}
+
+.btn-add:hover {
+    background-color: #5a359a;
+    border-color: #5a359a;
+    color: white;
+}
+
+.btn-add i {
+    margin-right: 5px;
+}
+
+.add-button-container {
+    margin-bottom: 1.5rem; /* Espaçamento padrão Bootstrap */
+    text-align: right;
+}
+
+/* Estilos da Tabela */
+.table {
+    margin-bottom: 1rem; /* Espaçamento padrão */
+    color: #212529; /* Cor texto padrão */
+    border-color: #dee2e6; /* Cor borda padrão */
+}
+
+.table thead th {
+    background-color: #f8f9fa; /* Cinza claro Bootstrap */
+    color: #6c757d; /* Cinza texto Bootstrap */
+    text-transform: uppercase;
+    font-size: 0.875em; /* Tamanho fonte menor */
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    padding: 0.75rem;
+    text-align: inherit;
+}
+
+.table tbody tr {
+    background-color: #fff; /* Fundo branco */
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #dee2e6;
+}
+
+.table-bordered thead th {
+    border-bottom-width: 2px;
+}
+
+.table td {
+     padding: 0.75rem;
+     vertical-align: middle; /* Alinha conteúdo verticalmente */
+     border-top: 1px solid #dee2e6;
+}
+
+/* Coluna Status (Texto Simples) */
+/* Não precisa de estilo específico, usará cor padrão da célula */
+
+/* Coluna Ações (Ícones Coloridos) */
+.table-actions a,
+.table-actions button {
+    background: none;
+    border: none;
+    padding: 0 5px; /* Espaçamento entre ícones */
+    cursor: pointer;
+    text-decoration: none; /* Remove sublinhado de links */
+    vertical-align: middle;
+}
+
+.table-actions .icon-edit {
+    color: #0d6efd; /* Azul Bootstrap */
+}
+
+.table-actions .icon-toggle-active { /* Ícone para Desativar (quando está ativo) */
+    color: #dc3545; /* Vermelho Bootstrap */
+}
+
+.table-actions .icon-toggle-inactive { /* Ícone para Ativar (quando está inativo) */
+    color: #198754; /* Verde Bootstrap */
+}
+
+.table-actions a:hover i,
+.table-actions button:hover i{
+    opacity: 0.7;
+} 

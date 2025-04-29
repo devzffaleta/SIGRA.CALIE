@@ -4,9 +4,11 @@
 .config-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Colunas responsivas */
-    gap: 2.5rem; /* Espaçamento entre os cards (equivalente a gap-6 do Tailwind) */
+    row-gap: 2.5rem; 
+    column-gap: 2.5rem; 
     margin-top: 1.5rem;
-    margin-right: 1.5rem;
+    margin-right: 1.5rem; /* <<< Revertido: Margem de volta */
+    /* align-items: start; */ /* Removido para testar o stretch padrão */
 }
 
 /* Estilo para o link do card */

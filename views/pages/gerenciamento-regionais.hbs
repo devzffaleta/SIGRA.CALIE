@@ -1,0 +1,225 @@
+{{!< layouts/main}}
+
+{{#section 'css'}}
+    {{!-- <link rel="stylesheet" href="/css/gerenciamento-regionais.css"> --}} {{!-- Removido --}}
+    <link rel="stylesheet" href="/css/gerenciamento-tabelas.css"> {{!-- Adicionado CSS Comum --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {{!-- Bloco <style> removido --}}
+{{/section}}
+
+<h1>{{pageTitle}}</h1>
+
+<div class="add-button-container">
+    {{!-- Botão já usa a classe .btn-add do novo CSS --}}
+    <a href="#" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#modalRegional">
+        <i class="fas fa-plus"></i> Nova Regional
+    </a>
+</div>
+
+{{!-- Removido table-striped --}}
+<table class="table table-bordered"> 
+    <thead>
+        <tr>
+            <th>Razão Social</th>
+            <th>Nome Fantasia</th>
+            <th>CNPJ</th>
+            <th>Telefone</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#if regionais}}
+            {{#each regionais}}
+                <tr>
+                    <td>{{this.razaoSocial}}</td>
+                    <td>{{this.nomeFantasia}}</td>
+                    <td>{{this.cnpj}}</td>
+                    <td>{{this.telefone}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.status}}</td> {{!-- Simplificado para exibir texto direto --}}
+                    <td class="table-actions">
+                        {{!-- Botão Editar com novo estilo de ícone --}}
+                        <button title="Editar" data-bs-toggle="modal" data-bs-target="#modalRegional">
+                            <i class="fas fa-pencil-alt icon-edit"></i>
+                        </button>
+                        {{#eq this.status "Ativo"}}
+                             {{!-- Botão Desativar com novo estilo de ícone --}}
+                            <button title="Desativar"> 
+                                <i class="fas fa-toggle-off icon-toggle-active"></i>
+                            </button>
+                        {{else}}
+                            {{!-- Botão Ativar com novo estilo de ícone --}}
+                            <button title="Ativar"> 
+                                <i class="fas fa-toggle-on icon-toggle-inactive"></i>
+                            </button>
+                        {{/eq}}
+                    </td>
+                </tr>
+            {{/each}}
+        {{else}}
+            <tr>
+                <td colspan="7" class="text-center">Nenhuma regional encontrada.</td>
+            </tr>
+        {{/if}}
+    </tbody>
+</table>
+
+{{!-- Modal para Criar/Editar Regional --}}
+<div class="modal fade" id="modalRegional" tabindex="-1" aria-labelledby="modalRegionalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg"> {{!-- modal-lg para mais espaço --}}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalRegionalLabel">Adicionar/Editar Regional</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formRegional"> {{!-- TODO: Adicionar action e method quando integrar backend --}}
+                    {{!-- Campo Oculto para ID (para edição) --}}
+                    <input type="hidden" id="regionalId" name="id">
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="regionalRazaoSocial" class="form-label">Razão Social <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="regionalRazaoSocial" name="razaoSocial" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="regionalNomeFantasia" class="form-label">Nome Fantasia</label>
+                            <input type="text" class="form-control" id="regionalNomeFantasia" name="nomeFantasia">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                         <div class="col-md-6">
+                            <label for="regionalCnpj" class="form-label">CPF ou CNPJ <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="regionalCnpj" name="cnpj" required>
+                            {{!-- TODO: Adicionar máscara/validação para CPF/CNPJ --}}
+                        </div>
+                         <div class="col-md-6">
+                            <label for="regionalTelefone" class="form-label">Telefone</label>
+                            <input type="tel" class="form-control" id="regionalTelefone" name="telefone">
+                            {{!-- TODO: Adicionar máscara para telefone --}}
+                        </div>
+                    </div>
+
+                     <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="regionalEmail" class="form-label">E-mail</label>
+                            <input type="email" class="form-control" id="regionalEmail" name="email">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="regionalRepresentante" class="form-label">Representante</label>
+                            <input type="text" class="form-control" id="regionalRepresentante" name="representante">
+                        </div>
+                    </div>
+
+                    <hr>
+                    <h5>Endereço</h5>
+                     <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label for="regionalLogradouro" class="form-label">Logradouro</label>
+                            <input type="text" class="form-control" id="regionalLogradouro" name="logradouro">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="regionalNumero" class="form-label">Número</label>
+                            <input type="text" class="form-control" id="regionalNumero" name="numero">
+                        </div>
+                    </div>
+                     <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="regionalComplemento" class="form-label">Complemento</label>
+                            <input type="text" class="form-control" id="regionalComplemento" name="complemento">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="regionalBairro" class="form-label">Bairro</label>
+                            <input type="text" class="form-control" id="regionalBairro" name="bairro">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                         <div class="col-md-5">
+                            <label for="regionalCidade" class="form-label">Cidade</label>
+                            <input type="text" class="form-control" id="regionalCidade" name="cidade">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="regionalEstado" class="form-label">Estado</label>
+                            <input type="text" class="form-control" id="regionalEstado" name="estado" maxlength="2">
+                             {{!-- TODO: Usar select para estados --}}
+                        </div>
+                        <div class="col-md-4">
+                            <label for="regionalCep" class="form-label">CEP</label>
+                            <input type="text" class="form-control" id="regionalCep" name="cep">
+                            {{!-- TODO: Adicionar máscara e busca por CEP --}}
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="submit" form="formRegional" class="btn btn-primary">Salvar</button> {{!-- O botão submit fica fora mas referencia o form --}}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- Fim Modal Regional --}}
+
+{{#section 'js'}}
+    {{!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> --}} {{!-- REMOVIDO - Agora está no main.hbs --}}
+    {{!-- <script src="/js/gerenciamento-regionais.js"></script> --}}
+
+    <script>
+        const modalRegional = new bootstrap.Modal(document.getElementById('modalRegional'));
+        const formRegional = document.getElementById('formRegional');
+        const modalRegionalLabel = document.getElementById('modalRegionalLabel');
+
+        // Abrir modal para NOVA regional
+        document.querySelector('.btn-add').addEventListener('click', (event) => {
+            event.preventDefault(); // Previne comportamento padrão do link #
+            formRegional.reset(); // Limpa o formulário
+            document.getElementById('regionalId').value = ''; // Garante que ID está vazio
+            modalRegionalLabel.textContent = 'Nova Regional'; // Muda o título do modal
+            modalRegional.show();
+        });
+
+        // Abrir modal para EDITAR regional (Exemplo básico)
+        document.querySelectorAll('.btn-edit').forEach(button => {
+            button.addEventListener('click', (event) => {
+                // TODO: Em uma aplicação real, buscaria os dados da regional (via ID ou data attributes) e preencheria o form.
+                // Por enquanto, apenas abre o modal com dados hipotéticos ou limpo.
+                formRegional.reset(); // Limpa pra começar
+                modalRegionalLabel.textContent = 'Editar Regional'; // Muda o título
+
+                // Exemplo (simulado): Pegar dados de atributos data-* na linha da tabela (<tr>)
+                // const row = event.target.closest('tr');
+                // document.getElementById('regionalId').value = row.dataset.id;
+                // document.getElementById('regionalRazaoSocial').value = row.dataset.razaoSocial; 
+                // ... preencher outros campos ...
+                
+                // Neste exemplo sem backend, apenas abrimos o modal.
+                // Poderíamos pré-preencher com dados fixos só pra demonstração, se desejado.
+                document.getElementById('regionalId').value = '123'; // ID Fixo de exemplo
+                document.getElementById('regionalRazaoSocial').value = 'Razão Social Exemplo Edit'; 
+                document.getElementById('regionalNomeFantasia').value = 'Fantasia Edit'; 
+                //... etc para outros campos ...
+
+                modalRegional.show();
+            });
+        });
+
+         // Lidar com o submit do formulário (Apenas loga por enquanto)
+        formRegional.addEventListener('submit', (event) => {
+            event.preventDefault(); // Impede o envio real do formulário
+            console.log('Formulário Regional submetido (simulado)');
+            const formData = new FormData(formRegional);
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+            modalRegional.hide(); // Fecha o modal após submit (simulado)
+            // TODO: Adicionar lógica de chamada AJAX para backend aqui
+            // TODO: Adicionar feedback para o usuário (sucesso/erro)
+        });
+
+    </script>
+{{/section}} 
