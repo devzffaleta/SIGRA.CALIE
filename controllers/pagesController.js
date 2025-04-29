@@ -77,44 +77,58 @@ export async function getGerenciamentoUsuariosPage(req, res, next) {
  */
 export async function getGerenciamentoSgasPage(req, res, next) {
     try {
-        // TODO: Buscar dados reais dos SGAs do banco de dados
-        // Exemplo de como poderia ser, assumindo um modelo SGA:
-        /*
+        // Buscar dados reais dos SGAs do banco de dados
         const sgas = await db.SGA.findAll({
-             include: [{ // Incluir o usuário responsável, se necessário
+             include: [{ // Incluir o usuário responsável
                  model: db.User,
-                 as: 'usuarioResponsavelInfo', // Alias da associação
-                 attributes: ['user_nome'] // Apenas o nome do usuário
+                 as: 'usuarioResponsavel', // Alias definido na associação em models/sga.js
+                 attributes: ['user_nome'] // Buscar apenas o nome do usuário
              }],
-             // Adicionar outros atributos necessários
-             raw: false, // Para associações funcionarem
-             nest: true
+             attributes: [ // Selecionar campos específicos do SGA
+                'codigo_SGA_PK', 
+                'sga_nome', 
+                'sga_horario_sincronizacao',
+                'sga_status',
+                'sga_token_api', // <<< ATENÇÃO: Expor tokens na view pode ser um risco de segurança.
+                'sga_url_base',
+                'sga_usuario_api',
+                'sga_versao_api',
+                'sga_usuario_responsavel' // Incluir a FK para ter o ID no data attribute
+             ],
+             raw: false, // Necessário para que a associação funcione corretamente
+             nest: true   // Organiza o resultado aninhado (usuarioResponsavel dentro de sga)
         });
 
+        // Mapear os dados para a estrutura esperada pela view
         const sgasData = sgas.map(sga => ({
-            id: sga.sga_codigo_pk,
+            id: sga.codigo_SGA_PK,
             nome: sga.sga_nome,
-            usuarioResponsavel: sga.usuarioResponsavelInfo?.user_nome || 'N/A',
+            // Acessa o nome do usuário através da associação aninhada
+            usuarioResponsavel: sga.usuarioResponsavel?.user_nome || 'Não definido', 
+            // Pega o ID do usuário responsável (FK direta no SGA)
             usuarioResponsavelId: sga.sga_usuario_responsavel,
-            horarioSincronizacao: sga.sga_horario_sincronizacao, // Formatar se necessário
-            status: sga.sga_status, // Mapear para texto/classe se necessário
-            token: sga.sga_token_identificador, // Cuidado ao expor tokens
+            // Formatar o horário (exemplo: remover segundos, ajustar fuso se necessário)
+            // Aqui apenas pegamos o valor como está, ajuste se precisar
+            horarioSincronizacao: sga.sga_horario_sincronizacao, 
+            status: sga.sga_status, // O ENUM já deve vir como 'ativo' ou 'inativo'
+            token: sga.sga_token_api, // Passando o token completo
             urlBase: sga.sga_url_base,
             usuarioApi: sga.sga_usuario_api,
             versaoApi: sga.sga_versao_api
-            // Não inclua senha da API aqui!
+            // Não inclua sga_senha_api aqui!
         }));
-        */
        
-        // Dados de exemplo por enquanto:
-        const sgasData = [
+        // Remover dados de exemplo
+        /* 
+        const sgasDataExemplo = [
             { id: 'sga1', nome: 'SGA Exemplo 1', usuarioResponsavel: 'Admin User', usuarioResponsavelId: 'user1', horarioSincronizacao: '03:00', status: 'Ativo', token: 'abc', urlBase:'http://ex1.com', usuarioApi:'api1', versaoApi:'v1' },
             { id: 'sga2', nome: 'SGA Inativo', usuarioResponsavel: 'Jane Doe', usuarioResponsavelId: 'user2', horarioSincronizacao: 'Diário às 22:00', status: 'Inativo', token:'def', urlBase:'http://ex2.com', usuarioApi:'api2', versaoApi:'v2' }
         ];
+        */
 
         res.render('pages/gerenciamento-sgas', {
             pageTitle: 'Gerenciamento de SGAs',
-            sgas: sgasData, // Passa os dados (exemplo por enquanto)
+            sgas: sgasData, // Passa os dados reais do banco
             layout: 'layouts/main'
         });
     } catch (error) {

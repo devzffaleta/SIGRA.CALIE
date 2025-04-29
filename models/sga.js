@@ -31,7 +31,8 @@ export default (sequelize) => {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
-      allowNull: false
+      allowNull: false,
+      field: 'codigo_SGA_PK'
     },
     sga_nome: {
       type: DataTypes.STRING(255),
@@ -72,7 +73,8 @@ export default (sequelize) => {
       references: {
         model: 'users', // Sequelize geralmente pega o nome da tabela aqui
         key: 'user_codigo_PK'
-      }
+      },
+      field: 'sga_usuario_responsavel'
     },
     sga_versao_api: {
       type: DataTypes.STRING(10),
