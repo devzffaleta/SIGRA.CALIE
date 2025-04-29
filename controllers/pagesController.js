@@ -72,9 +72,7 @@ export async function getGerenciamentoUsuariosPage(req, res, next) {
     }
 }
 
-/**
- * Renderiza a Página de Grupo de Permissões
- */
+/* REMOVIDO: Esta função foi movida para perfilController.js e a rota usa /gerenciamento-grupos
 export function getGrupoPermissoesPage(req, res, next) {
     try {
         // TODO: Buscar lista de grupos de permissão do banco de dados
@@ -92,4 +90,5 @@ export function getGrupoPermissoesPage(req, res, next) {
         console.error('[getGrupoPermissoesPage] Erro:', error);
         next(error);
     }
-} 
+}
+*/ 
