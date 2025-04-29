@@ -16,6 +16,7 @@ router.get('/test-sidebar', pagesController.getTestSidebarPage);
 // Novas rotas
 router.get('/configuracao-sistema', pagesController.getConfiguracaoSistemaPage);
 router.get('/gerenciamento-usuarios', pagesController.getGerenciamentoUsuariosPage);
+router.get('/gerenciamento-sgas', pagesController.getGerenciamentoSgasPage);
 // router.get('/grupo-permissoes', pagesController.getGrupoPermissoesPage);
 
 // Adicionar outras rotas de páginas genéricas aqui se necessário

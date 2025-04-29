@@ -72,48 +72,50 @@ export async function getGerenciamentoUsuariosPage(req, res, next) {
     }
 }
 
-/* REMOVIDO: Esta função foi movida para perfilController.js e a rota usa /gerenciamento-grupos
-export function getGrupoPermissoesPage(req, res, next) {
-    try {
-        // TODO: Buscar lista de grupos de permissão do banco de dados
-        const gruposData = [
-            { nome: 'Administradores', descricao: 'Acesso total', numUsuarios: 2 },
-            { nome: 'Consultores', descricao: 'Acesso a vendas', numUsuarios: 15 }
-        ]; 
-
-        res.render('pages/gerenciamento-grupos', { 
-            pageTitle: 'Grupo de Permissões',
-            grupos: gruposData,
-            layout: 'layouts/main'
-        });
-    } catch (error) {
-        console.error('[getGrupoPermissoesPage] Erro:', error);
-        next(error);
-    }
-}
-
 /**
  * Renderiza a Página de Gerenciamento de SGAs
  */
-export function getGerenciamentoSgasPage(req, res, next) {
+export async function getGerenciamentoSgasPage(req, res, next) {
     try {
-        // Dados Mock para SGAs
-        const mockSgas = [
-            { id: 1, nome: 'SGA Principal', token: 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2' },
-            { id: 2, nome: 'SGA Filial SP', token: 'z9y8x7w6v5u4t3s2r1q0p9o8n7m6l5k4j3i2h1g0f9e8d7c6b5a4z3y2x1w0' },
-            { id: 3, nome: 'SGA Filial RJ', token: 'abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz' }
-        ];
+        // TODO: Buscar dados reais dos SGAs do banco de dados
+        // Exemplo de como poderia ser, assumindo um modelo SGA:
+        /*
+        const sgas = await db.SGA.findAll({
+             include: [{ // Incluir o usuário responsável, se necessário
+                 model: db.User,
+                 as: 'usuarioResponsavelInfo', // Alias da associação
+                 attributes: ['user_nome'] // Apenas o nome do usuário
+             }],
+             // Adicionar outros atributos necessários
+             raw: false, // Para associações funcionarem
+             nest: true
+        });
 
-        // Adiciona uma versão curta/mascarada do token para exibição
-        const sgasParaExibir = mockSgas.map(sga => ({
-            ...sga,
-            tokenCurto: sga.token ? `toke...${sga.token.slice(-4)}` : 'N/A' // Exibe toke... + últimos 4 chars
+        const sgasData = sgas.map(sga => ({
+            id: sga.sga_codigo_pk,
+            nome: sga.sga_nome,
+            usuarioResponsavel: sga.usuarioResponsavelInfo?.user_nome || 'N/A',
+            usuarioResponsavelId: sga.sga_usuario_responsavel,
+            horarioSincronizacao: sga.sga_horario_sincronizacao, // Formatar se necessário
+            status: sga.sga_status, // Mapear para texto/classe se necessário
+            token: sga.sga_token_identificador, // Cuidado ao expor tokens
+            urlBase: sga.sga_url_base,
+            usuarioApi: sga.sga_usuario_api,
+            versaoApi: sga.sga_versao_api
+            // Não inclua senha da API aqui!
         }));
+        */
+       
+        // Dados de exemplo por enquanto:
+        const sgasData = [
+            { id: 'sga1', nome: 'SGA Exemplo 1', usuarioResponsavel: 'Admin User', usuarioResponsavelId: 'user1', horarioSincronizacao: '03:00', status: 'Ativo', token: 'abc', urlBase:'http://ex1.com', usuarioApi:'api1', versaoApi:'v1' },
+            { id: 'sga2', nome: 'SGA Inativo', usuarioResponsavel: 'Jane Doe', usuarioResponsavelId: 'user2', horarioSincronizacao: 'Diário às 22:00', status: 'Inativo', token:'def', urlBase:'http://ex2.com', usuarioApi:'api2', versaoApi:'v2' }
+        ];
 
         res.render('pages/gerenciamento-sgas', {
             pageTitle: 'Gerenciamento de SGAs',
-            layout: 'layouts/main',
-            sgas: sgasParaExibir // Passa os dados mock para a view
+            sgas: sgasData, // Passa os dados (exemplo por enquanto)
+            layout: 'layouts/main'
         });
     } catch (error) {
         console.error('[getGerenciamentoSgasPage] Erro:', error);
