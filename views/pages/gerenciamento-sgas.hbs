@@ -249,28 +249,51 @@
             });
 
             // Submit do Formulário
-            formSga?.addEventListener('submit', (event) => {
+            formSga?.addEventListener('submit', async (event) => {
                 event.preventDefault();
-                const sgaId = sgaIdInput.value;
-                const action = sgaId ? 'Editado' : 'Criado';
-                console.log(`Formulário SGA ${action} (simulado) - ID: ${sgaId || 'Novo'}`);
                 
-                // Exemplo de como pegar os dados (NÃO ENVIAR SENHA EM LOGS REAIS)
-                const formData = new FormData(formSga);
-                 console.log('Dados do formulário:');
-                 for (let [key, value] of formData.entries()) {
-                     // Cuidado com a senha em logs! Em produção, NUNCA logar senhas.
-                    if (key === 'senhaApi' && value) {
-                         console.log(`${key}: ********`); 
-                    } else {
-                        console.log(`${key}: ${value}`);
-                    }
-                }
+                const sgaId = sgaIdInput.value;
+                const method = sgaId ? 'PUT' : 'POST'; // Define o método HTTP (PUT para editar, POST para criar)
+                const url = sgaId ? `/api/sgas/${sgaId}` : '/api/sgas'; // Define a URL da API
+                const actionText = sgaId ? 'editado' : 'criado';
 
-                alert(`SGA ${action} com sucesso! (Simulação)`); // Feedback simples
-                closeModal();
-                // TODO: Aqui iria a lógica fetch para enviar ao backend
-                // TODO: Atualizar a tabela/cards dinamicamente após sucesso
+                // Pega os dados do formulário
+                const formData = new FormData(formSga);
+                const data = Object.fromEntries(formData.entries());
+
+                // Exibir um indicador de carregamento (opcional)
+                // showLoadingIndicator(); 
+
+                try {
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // Adicionar outros headers se necessário (ex: token CSRF, Authorization)
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        alert(`SGA ${actionText} com sucesso!`);
+                        closeModal();
+                        location.reload(); // <<< Recarrega a página para ver a alteração (solução mais simples)
+                        // TODO (Avançado): Em vez de reload, adicionar/atualizar a linha/card dinamicamente na UI
+                        // usando os dados de 'result.sga' retornados pela API.
+                    } else {
+                        // Exibe a mensagem de erro vinda do backend ou uma genérica
+                        alert(`Erro ao ${actionText.replace('o','ar')} SGA: ${result.message || response.statusText}`);
+                    }
+
+                } catch (error) {
+                    console.error(`Erro na requisição ${method} ${url}:`, error);
+                    alert(`Ocorreu um erro de rede ou inesperado ao tentar ${actionText.replace('o','ar')} o SGA.`);
+                } finally {
+                    // Esconder o indicador de carregamento (opcional)
+                    // hideLoadingIndicator(); 
+                }
             });
 
             // Excluir SGA
@@ -281,7 +304,7 @@
                     if (confirm(`Tem certeza que deseja excluir o SGA "${sgaNome}" (ID: ${sgaId})?`)) {
                         console.log(`Excluir SGA ID: ${sgaId} (simulado)`);
                         alert(`SGA "${sgaNome}" excluído! (Simulação)`);
-                        // TODO: Lógica fetch para exclusão no backend
+                        // TODO: Lógica fetch para exclusão no backend (DELETE /api/sgas/:id)
                         // TODO: Remover a linha/card da UI após sucesso
                     }
                 });
