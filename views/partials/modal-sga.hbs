@@ -23,9 +23,14 @@
                          <label for="sgaUsuarioResponsavel">Usuário Responsável <span class="required">*</span></label>
                         <select id="sgaUsuarioResponsavel" name="usuarioResponsavelId" required>
                              <option value="" disabled selected>Selecione o responsável...</option>
-                            {{!-- TODO: Popular opções de usuários (ex: vindos do backend) --}}
-                            <option value="user1">Usuário Admin 1</option>
-                             <option value="user2">Usuário Líder 2</option>
+                            {{!-- Loop para popular opções de usuários administrativos --}}
+                            {{#if usuariosAdmin}}
+                                {{#each usuariosAdmin}}
+                                    <option value="{{this.user_codigo_PK}}">{{this.user_nome}}</option>
+                                {{/each}}
+                            {{else}}
+                                <option value="" disabled>Nenhum usuário administrativo encontrado</option>
+                            {{/if}}
                         </select>
                     </div>
                 </div>

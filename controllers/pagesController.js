@@ -1,4 +1,5 @@
 import db from '../models/index.js'; // Ajuste o caminho se necessário
+const { SGA, User } = db; // <<< Adicionar User aqui se não estiver
 
 /**
  * Renderiza a página de teste da sidebar (agora simplificada)
@@ -118,17 +119,20 @@ export async function getGerenciamentoSgasPage(req, res, next) {
             // Não inclua sga_senha_api aqui!
         }));
        
-        // Remover dados de exemplo
-        /* 
-        const sgasDataExemplo = [
-            { id: 'sga1', nome: 'SGA Exemplo 1', usuarioResponsavel: 'Admin User', usuarioResponsavelId: 'user1', horarioSincronizacao: '03:00', status: 'Ativo', token: 'abc', urlBase:'http://ex1.com', usuarioApi:'api1', versaoApi:'v1' },
-            { id: 'sga2', nome: 'SGA Inativo', usuarioResponsavel: 'Jane Doe', usuarioResponsavelId: 'user2', horarioSincronizacao: 'Diário às 22:00', status: 'Inativo', token:'def', urlBase:'http://ex2.com', usuarioApi:'api2', versaoApi:'v2' }
-        ];
-        */
+        // <<< NOVO: Buscar usuários com função 'administrativo' para o select >>>
+        const usuariosAdmin = await User.findAll({
+            where: { funcao: 'administrativo' }, // Filtra pela função
+            attributes: ['user_codigo_PK', 'user_nome'], // Seleciona apenas ID e nome
+            order: [['user_nome', 'ASC']] // Ordena por nome
+        });
+
+        // Mapear para um formato simples (opcional, mas limpo)
+        const usuariosAdminData = usuariosAdmin.map(user => user.toJSON());
 
         res.render('pages/gerenciamento-sgas', {
             pageTitle: 'Gerenciamento de SGAs',
-            sgas: sgasData, // Passa os dados reais do banco
+            sgas: sgasData, 
+            usuariosAdmin: usuariosAdminData, // <<< Passa a lista de usuários para a view
             layout: 'layouts/main'
         });
     } catch (error) {

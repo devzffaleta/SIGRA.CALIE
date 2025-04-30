@@ -137,8 +137,8 @@
 </div>
 
 {{!-- ********** INCLUSÃO DO MODAL SGA (VIA PARCIAL) ********** --}}
-{{!-- Revertendo novamente para a forma simples, que deveria funcionar com registerPartials --}}
-{{> modal-sga }}
+{{!-- Passando a lista de usuários administrativos para o contexto do parcial --}}
+{{> modal-sga usuariosAdmin=usuariosAdmin }}
 
 {{#section 'js'}}
     {{!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> --}} {{!-- REMOVER BOOTSTRAP JS --}}
