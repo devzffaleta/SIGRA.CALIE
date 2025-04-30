@@ -86,8 +86,9 @@
                     <div class="form-group">
                          <label for="sgaStatus">Status <span class="required">*</span></label>
                         <select id="sgaStatus" name="status" required>
-                             <option value="Ativo">Ativo</option>
-                             <option value="Inativo">Inativo</option>
+                             {{!-- Valores agora em minúsculo para corresponder ao ENUM --}}
+                             <option value="ativo">Ativo</option>
+                             <option value="inativo">Inativo</option>
                         </select>
                     </div>
                 </div>
