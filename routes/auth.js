@@ -1,3 +1,4 @@
+console.log('[auth.js] Arquivo de rotas de autenticação carregado');
 // 'use strict'; // Remover
 
 // const express = require('express'); // Mudar para import

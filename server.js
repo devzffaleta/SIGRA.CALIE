@@ -54,6 +54,7 @@ dotenv.config(); // Carregar variáveis de ambiente (esta linha já faz o trabal
 import mainRouter from './routes/index.js'; // Exemplo: Assumindo que routes/index.js exporta default
 
 const app = express();
+console.log('[server.js] Express app inicializado');
 const port = process.env.PORT || 3000; // Usar porta do ambiente ou 3000
 
 // Define o caminho para os diretórios
@@ -72,6 +73,12 @@ app.use(express.static(publicDirectoryPath));
 // Middlewares essenciais
 app.use(express.json()); // Para parsear JSON no corpo das requisições
 app.use(express.urlencoded({ extended: true })); // Para parsear dados de formulários (necessário para o POST de primeiro-acesso)
+
+// Middleware global de log de requisições
+app.use((req, res, next) => {
+  console.log(`[GLOBAL] ${req.method} ${req.url}`);
+  next();
+});
 
 // <<< Configuração da Sessão >>>
 if (!process.env.SESSION_SECRET) {

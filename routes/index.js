@@ -10,6 +10,8 @@ import sgaRoutes from './sgaRoutes.js';
 
 const router = express.Router();
 
+console.log('[index.js] Arquivo de rotas principal carregado');
+
 // === Rotas de Renderização de Páginas ===
 // Monta as rotas de autenticação no caminho raiz (/, /login, /primeiro-acesso)
 router.use('/', authRoutes);

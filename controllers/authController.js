@@ -6,7 +6,9 @@ import * as userService from '../services/userService.js'; // Importa o serviço
  */
 export async function getLoginPage(req, res, next) { 
     try {
+        console.log('[getLoginPage] Iniciando processamento da rota /login');
         const userExists = await userService.checkIfAnyUserExists();
+        console.log('[getLoginPage] userExists:', userExists);
         if (!userExists) {
             console.log('Nenhum usuário encontrado. Redirecionando para /primeiro-acesso.');
             return res.redirect('/primeiro-acesso');
@@ -16,8 +18,7 @@ export async function getLoginPage(req, res, next) {
         res.render('login'); 
     } catch (error) {
         console.error('Erro ao carregar página de login:', error);
-        // Considerar renderizar uma página de erro em vez de apenas enviar texto
-        res.status(500).render('error', { message: 'Erro interno', error });
+        next(error); // Encaminha para o middleware de erro do Express
     }
 }
 
